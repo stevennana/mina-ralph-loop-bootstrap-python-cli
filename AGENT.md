@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repository defines the Codex skill `mina-ralph-loop-bootstrap-python`.
+This repository defines the Codex skill `mina-ralph-loop-bootstrap-python-cli`.
 
 The skill bootstraps a brand new or very early-stage repository into a docs-first, Ralph-style task-promotion repo using a fixed Python CLI preset:
 

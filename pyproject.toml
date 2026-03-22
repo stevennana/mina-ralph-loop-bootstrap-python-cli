@@ -1,5 +1,5 @@
 [project]
-name = "mina-ralph-loop-bootstrap-python"
+name = "mina-ralph-loop-bootstrap-python-cli"
 version = "0.1.0"
 description = "Codex skill for bootstrapping Python CLI repos around a Ralph loop."
 requires-python = ">=3.12"

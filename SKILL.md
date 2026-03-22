@@ -3,7 +3,7 @@ name: mina-ralph-loop-bootstrap-python-cli
 description: Bootstrap or extend a new or early-stage Python CLI repository around a Ralph-style task-promotion loop. Use when Codex needs to interview for product and architecture intent, generate repo-local docs first, scaffold a Python CLI/worker preset, install Ralph loop scripts, and define the initial or next exec-plan wave.
 ---
 
-# Mina Ralph Loop Bootstrap Python
+# Mina Ralph Loop Bootstrap Python CLI
 
 Build the repository in this order:
 

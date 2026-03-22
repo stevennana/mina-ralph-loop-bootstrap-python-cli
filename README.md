@@ -1,6 +1,6 @@
-# mina-ralph-loop-bootstrap-python
+# mina-ralph-loop-bootstrap-python-cli
 
-`mina-ralph-loop-bootstrap-python` is a Codex skill for bootstrapping or extending a brand new or very early-stage Python CLI repository into a docs-first Ralph-style task-promotion repo.
+`mina-ralph-loop-bootstrap-python-cli` is a Codex skill for bootstrapping or extending a brand new or very early-stage Python CLI repository into a docs-first Ralph-style task-promotion repo.
 
 The first version is intentionally opinionated. It supports one primary preset:
 
@@ -125,17 +125,17 @@ From any shell:
 
 ```bash
 mkdir -p ~/.codex/skills
-ln -s /absolute/path/to/mina-ralph-loop-bootstrap-python ~/.codex/skills/mina-ralph-loop-bootstrap-python
+ln -s /absolute/path/to/mina-ralph-loop-bootstrap-python-cli ~/.codex/skills/mina-ralph-loop-bootstrap-python-cli
 ```
 
 For this repository specifically:
 
 ```bash
-ln -s /Users/stevenna/PycharmProjects/mina-ralph-loop-bootstrap-python ~/.codex/skills/mina-ralph-loop-bootstrap-python
+ln -s /Users/stevenna/PycharmProjects/mina-ralph-loop-bootstrap-python-cli ~/.codex/skills/mina-ralph-loop-bootstrap-python-cli
 ```
 
 Then start a Codex session in the target repository and prompt:
 
 ```text
-Use $mina-ralph-loop-bootstrap-python to bootstrap this repository into a docs-first Ralph-style Python CLI project.
+Use $mina-ralph-loop-bootstrap-python-cli to bootstrap this repository into a docs-first Ralph-style Python CLI project.
 ```
