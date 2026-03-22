@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mina Ralph Loop Bootstrap Python"
+  short_description: "Bootstrap or extend a Python CLI Ralph loop repo"
+  default_prompt: "Use $mina-ralph-loop-bootstrap-python to bootstrap or extend a Python CLI repository with Ralph-loop docs, scaffold, and executable plan waves."

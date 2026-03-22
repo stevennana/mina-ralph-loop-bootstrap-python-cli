@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1331.2849999999999 3164.9050000000007" width="1331.2849999999999" height="3164.9050000000007" style="--bg:#ffffff;--fg:#1f2328;--line:#d1d9e0;--accent:#0969da;--muted:#59636e;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="LOOP" data-label="Ralph Loop execution">
+  <rect x="204.78533333333328" y="1586.308" width="923.2096666666666" height="1403.3970000000002" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="204.78533333333328" y="1586.308" width="923.2096666666666" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="216.78533333333328" y="1600.308" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Ralph Loop execution</text>
+</g>
+<polyline class="edge" data-from="U" data-to="CS" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="429.16150000000016,76.9 429.16150000000016,124.9" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="CS" data-to="CI" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="385.6893333333336,342.2608333333334 385.6893333333336,421.73299999999995 377.8333333333335,421.73299999999995 377.8333333333335,502.0329999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="CS" data-to="PM" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="472.63366666666684,342.26083333333327 472.63366666666684,421.73299999999995 504.02683333333346,421.73299999999995 504.02683333333346,574.9329999999999 480.48966666666684,574.9329999999999 480.48966666666684,586.9329999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="CI" data-to="PM" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="377.8333333333335,538.9329999999999 377.8333333333336,586.9329999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PM" data-to="IV" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="429.16150000000016,623.8329999999999 429.16150000000016,671.8329999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="IV" data-to="REF" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="429.16150000000016,708.7329999999998 429.16150000000016,756.7329999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="REF" data-to="DOCS" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="429.16150000000016,793.6329999999998 429.1615000000002,841.6329999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DOCS" data-to="DQ" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="429.1615000000002,878.5329999999998 429.16150000000016,926.5329999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DQ" data-to="TIGHTEN" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="352.46775000000025,1156.6142499999999 352.46775000000025,1330.2079999999999 344.81587500000023,1330.2079999999999 344.81587500000023,1398.5079999999998 328.1640000000002,1398.5079999999998 328.1640000000002,1410.5079999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TIGHTEN" data-to="DQ" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="420.16150000000016,1410.5079999999998 420.16150000000016,1398.5079999999998 429.16150000000016,1398.5079999999998 429.16150000000016,1233.3079999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DQ" data-to="PLANS" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="505.8552500000002,1156.6142499999999 505.8552500000002,1245.3079999999998 728.6378333333334,1245.3079999999998 728.6378333333334,1325.6079999999997" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PLANS" data-to="PQ" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="825.1191666666667,1325.6079999999997 825.1191666666667,1148.4079999999994" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PQ" data-to="TIGHTEN" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="738.7924166666668,1062.0812499999997 738.7924166666668,1233.3079999999998 601.5394166666667,1233.3079999999998 601.5394166666667,1398.5079999999998 512.1590000000002,1398.5079999999998 512.1590000000002,1410.5079999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PQ" data-to="APP" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="911.4459166666668,1062.0812499999997 911.4459166666668,1160.4079999999997 1110.995,1160.4079999999997 1110.995,1240.7079999999996" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="APP" data-to="RALPH" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1110.995,1277.6079999999997 1110.995,1325.6079999999997" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="RALPH" data-to="VERIFY" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1110.995,1362.5079999999998 1110.995,1410.5079999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="VERIFY" data-to="FOUNDATION" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1110.995,1447.408 1110.995,1495.408" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="EXPAND" data-to="DELTA" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="334.4546666666666,3088.0050000000006 334.4546666666666,3076.0050000000006 193.78533333333328,3076.0050000000006 193.78533333333328,1532.308" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="FOUNDATION" data-to="SELECT" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1110.995,1532.308 1110.995,2658.105 847.1383333333333,2658.105 847.1383333333333,2682.105" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="MORE" data-to="EXPAND" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="558.0203333333333,2536.1648333333333 558.0203333333334,3076.005 417.35099999999994,3076.005 417.35099999999994,3088.005" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DELTA" data-to="SELECT" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="347.57066666666657,1532.308 347.57066666666657,1568.308 269.7284166666667,1568.308 269.7284166666667,2658.105 684.3096666666667,2658.105 684.3096666666667,2682.105" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="SELECT" data-to="WORK" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="765.7239999999999,2719.005 765.7239999999999,2767.005" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="WORK" data-to="CHECKS" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="765.7239999999999,2803.9049999999997 765.7239999999999,2851.9049999999997" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="CHECKS" data-to="EVAL" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="765.7239999999999,2888.8050000000003 765.7239999999999,2900.8050000000003 438.9419999999999,2900.8050000000003 438.9419999999999,2936.8050000000003" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="EVAL" data-to="PROMOTE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="329.86366666666663,2936.8050000000003 329.86366666666663,2198.764 410.62683333333337,2198.764 410.62683333333337,2158.4823333333334" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PROMOTE" data-to="COMPLETE" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="467.19016666666676,2158.4823333333334 467.19016666666676,2198.764 587.6605,2198.764 587.6605,2303.064" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PROMOTE" data-to="BLOCK" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="438.90850000000006,2017.074 438.9085,1912.774 678.2539166666667,1912.774 678.2539166666667,1833.1574999999998" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="BLOCK" data-to="SELECT" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No" points="745.8704166666666,1900.774 745.8704166666666,1912.774 765.7239999999999,1912.774 765.7239999999999,2682.1049999999996" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="BLOCK" data-to="RCA" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="813.4869166666667,1833.1574999999998 813.4869166666667,1912.774 938.8594999999998,1912.774 938.8594999999998,2083.469" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="RCA" data-to="RETURN" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="938.8594999999998,2120.3689999999997 938.8594999999998,2458.4345" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="RETURN" data-to="SELECT" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="938.8594999999998,2495.3345 938.8594999999998,2646.1049999999996 806.4311666666665,2646.1049999999996 806.4311666666665,2682.1049999999996" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="COMPLETE" data-to="MORE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="587.6605,2339.964 587.6605,2387.964" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="MORE" data-to="SELECT" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes" points="617.3006666666666,2536.1648333333333 617.3006666666666,2646.1049999999996 725.0168333333332,2646.1049999999996 725.0168333333332,2682.1049999999996" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="CS" data-to="CI" data-label="Yes">
+  <rect x="359.3333333333335" y="428.73299999999995" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="377.6623333333335" y="443.8829999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="edge-label" data-from="CS" data-to="PM" data-label="No">
+  <rect x="488.52683333333346" y="428.73299999999995" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="503.88583333333344" y="443.8829999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="DQ" data-to="TIGHTEN" data-label="No">
+  <rect x="329.31587500000023" y="1337.2079999999999" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="344.6748750000002" y="1352.358" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="DQ" data-to="PLANS" data-label="Yes">
+  <rect x="710.1378333333334" y="1252.3079999999998" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="728.4668333333334" y="1267.4579999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="edge-label" data-from="PQ" data-to="TIGHTEN" data-label="No">
+  <rect x="586.0394166666667" y="1337.2079999999999" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="601.3984166666668" y="1352.358" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="PQ" data-to="APP" data-label="Yes">
+  <rect x="1092.495" y="1167.4079999999997" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1110.8239999999998" y="1182.5579999999998" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="edge-label" data-from="MORE" data-to="EXPAND" data-label="No">
+  <rect x="542.5203333333333" y="3038.7050000000004" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="557.8793333333333" y="3053.8550000000005" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="PROMOTE" data-to="COMPLETE" data-label="Yes">
+  <rect x="569.1605" y="2229.7639999999997" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="587.4894999999999" y="2244.9139999999998" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="edge-label" data-from="PROMOTE" data-to="BLOCK" data-label="No">
+  <rect x="423.40850000000006" y="1943.774" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="438.76750000000004" y="1958.924" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="BLOCK" data-to="SELECT" data-label="No">
+  <rect x="750.2239999999999" y="2229.7639999999997" width="30.718000000000004" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="765.583" y="2244.9139999999998" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No</text>
+</g>
+<g class="edge-label" data-from="BLOCK" data-to="RCA" data-label="Yes">
+  <rect x="920.3594999999998" y="1943.774" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="938.6884999999997" y="1958.924" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="edge-label" data-from="MORE" data-to="SELECT" data-label="Yes">
+  <rect x="598.8006666666666" y="2608.805" width="36.658" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="617.1296666666666" y="2623.955" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes</text>
+</g>
+<g class="node" data-id="U" data-label="Founder or operator intent" data-shape="rectangle">
+  <rect x="330.75200000000024" y="40" width="196.81899999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.1615000000002" y="58.45" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Founder or operator intent</text>
+</g>
+<g class="node" data-id="CS" data-label="Pinned companion skills missing?" data-shape="diamond">
+  <polygon points="429.16150000000016,124.9 559.5780000000001,255.31649999999996 429.16150000000016,385.73299999999995 298.74500000000023,255.31649999999996" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.16150000000016" y="255.31649999999996" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Pinned companion skills missing?</text>
+</g>
+<g class="node" data-id="CI" data-label="Offer auto-install one skill at a time" data-shape="rectangle">
+  <rect x="261.6398333333335" y="502.0329999999999" width="232.38699999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="377.8333333333335" y="520.483" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Offer auto-install one skill at a time</text>
+</g>
+<g class="node" data-id="PM" data-label="Recommend Plan mode for interview selectors" data-shape="rectangle">
+  <rect x="275.17700000000025" y="586.9329999999999" width="307.9689999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.16150000000016" y="605.3829999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Recommend Plan mode for interview selectors</text>
+</g>
+<g class="node" data-id="IV" data-label="Stage the interview until product, architecture, and test strategy are specific" data-shape="rectangle">
+  <rect x="191.07350000000037" y="671.8329999999999" width="476.17599999999965" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.16150000000016" y="690.2829999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Stage the interview until product, architecture, and test strategy are specific</text>
+</g>
+<g class="node" data-id="REF" data-label="Analyze user references and persist notes in docs/references" data-shape="rectangle">
+  <rect x="225.15950000000026" y="756.7329999999998" width="408.00399999999985" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.16150000000016" y="775.1829999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Analyze user references and persist notes in docs/references</text>
+</g>
+<g class="node" data-id="DOCS" data-label="Render the baseline docs tree" data-shape="rectangle">
+  <rect x="320.7485000000002" y="841.6329999999998" width="216.826" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.1615000000002" y="860.0829999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Render the baseline docs tree</text>
+</g>
+<g class="node" data-id="DQ" data-label="Docs and feature specs specific enough?" data-shape="diamond">
+  <polygon points="429.1615000000002,926.5329999999997 582.5490000000002,1079.9204999999997 429.1615000000002,1233.3079999999998 275.7740000000002,1079.9204999999997" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="429.1615000000002" y="1079.9204999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Docs and feature specs specific enough?</text>
+</g>
+<g class="node" data-id="TIGHTEN" data-label="Tighten product, frontend, architecture, and design docs" data-shape="rectangle">
+  <rect x="236.16650000000024" y="1410.5079999999998" width="367.9899999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="420.16150000000016" y="1428.9579999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Tighten product, frontend, architecture, and design docs</text>
+</g>
+<g class="node" data-id="PLANS" data-label="Create feature specs and small exec-plans" data-shape="rectangle">
+  <rect x="632.1565000000002" y="1325.6079999999997" width="289.44399999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="776.8785000000001" y="1344.0579999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Create feature specs and small exec-plans</text>
+</g>
+<g class="node" data-id="PQ" data-label="Each exec-plan narrow, clear, and test-backed?" data-shape="diamond">
+  <polygon points="825.1191666666668,803.1009999999997 997.7726666666669,975.7544999999997 825.1191666666668,1148.4079999999997 652.4656666666668,975.7544999999997" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="825.1191666666668" y="975.7544999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Each exec-plan narrow, clear, and test-backed?</text>
+</g>
+<g class="node" data-id="APP" data-label="Scaffold the Next.js App Router + TypeScript app" data-shape="rectangle">
+  <rect x="949.6005" y="1240.7079999999996" width="322.7889999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1110.995" y="1259.1579999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Scaffold the Next.js App Router + TypeScript app</text>
+</g>
+<g class="node" data-id="RALPH" data-label="Install and adapt the Ralph loop" data-shape="rectangle">
+  <rect x="1001.4704999999999" y="1325.6079999999997" width="219.049" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1110.995" y="1344.0579999999998" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Install and adapt the Ralph loop</text>
+</g>
+<g class="node" data-id="VERIFY" data-label="Run deterministic checks and start:smoke when stateful" data-shape="rectangle">
+  <rect x="930.7049999999999" y="1410.5079999999998" width="360.57999999999987" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1110.995" y="1428.9579999999999" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Run deterministic checks and start:smoke when stateful</text>
+</g>
+<g class="node" data-id="FOUNDATION" data-label="Finalize bootstrap state and hand off the feature queue" data-shape="rectangle">
+  <rect x="934.41" y="1495.408" width="353.1699999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1110.995" y="1513.858" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Finalize bootstrap state and hand off the feature queue</text>
+</g>
+<g class="node" data-id="EXPAND" data-label="Re-enter docs-first expansion mode" data-shape="rectangle">
+  <rect x="251.55833333333328" y="3088.0050000000006" width="248.68899999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="375.90283333333326" y="3106.4550000000004" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Re-enter docs-first expansion mode</text>
+</g>
+<g class="node" data-id="DELTA" data-label="Run a delta interview, update specs/design docs, and seed the next wave" data-shape="rectangle">
+  <rect x="40" y="1495.408" width="461.3559999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="270.67799999999994" y="1513.858" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Run a delta interview, update specs/design docs, and seed the next wave</text>
+</g>
+<g class="node" data-id="SELECT" data-label="Select the current active exec-plan" data-shape="rectangle">
+  <rect x="643.6025" y="2682.1049999999996" width="244.243" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="765.7239999999999" y="2700.5549999999994" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Select the current active exec-plan</text>
+</g>
+<g class="node" data-id="WORK" data-label="Worker implements one small slice" data-shape="rectangle">
+  <rect x="645.8254999999999" y="2767.005" width="239.79699999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="765.7239999999999" y="2785.455" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Worker implements one small slice</text>
+</g>
+<g class="node" data-id="CHECKS" data-label="Run required deterministic checks" data-shape="rectangle">
+  <rect x="644.3435" y="2851.9049999999997" width="242.76099999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="765.7239999999999" y="2870.3549999999996" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Run required deterministic checks</text>
+</g>
+<g class="node" data-id="EVAL" data-label="Evaluator reviews substance after green checks" data-shape="rectangle">
+  <rect x="220.78533333333328" y="2936.8050000000003" width="327.23499999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="384.40283333333326" y="2955.255" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Evaluator reviews substance after green checks</text>
+</g>
+<g class="node" data-id="PROMOTE" data-label="Promote the task?" data-shape="diamond">
+  <polygon points="438.9085000000001,2017.0739999999998 523.7535000000001,2101.919 438.9085000000001,2186.7639999999997 354.0635000000001,2101.919" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="438.9085000000001" y="2101.919" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Promote the task?</text>
+</g>
+<g class="node" data-id="COMPLETE" data-label="Archive the completed plan and advance the queue" data-shape="rectangle">
+  <rect x="419.597" y="2303.064" width="336.1269999999999" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="587.6605" y="2321.5139999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Archive the completed plan and advance the queue</text>
+</g>
+<g class="node" data-id="BLOCK" data-label="Same environment blocker 3 times?" data-shape="diamond">
+  <polygon points="745.8704166666666,1630.308 881.1034166666666,1765.541 745.8704166666666,1900.774 610.6374166666667,1765.541" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="745.8704166666666" y="1765.541" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Same environment blocker 3 times?</text>
+</g>
+<g class="node" data-id="RCA" data-label="Create a blocker RCA/fix exec-plan" data-shape="rectangle">
+  <rect x="815.6264999999999" y="2083.469" width="246.46599999999995" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="938.8594999999998" y="2101.919" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Create a blocker RCA/fix exec-plan</text>
+</g>
+<g class="node" data-id="RETURN" data-label="Resolve the blocker and resume the original task" data-shape="rectangle">
+  <rect x="776.7239999999999" y="2458.4345" width="324.27099999999996" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="938.8594999999999" y="2476.8844999999997" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Resolve the blocker and resume the original task</text>
+</g>
+<g class="node" data-id="MORE" data-label="More active tasks?" data-shape="diamond">
+  <polygon points="587.6605,2387.964 676.5809999999999,2476.8845 587.6605,2565.8050000000003 498.73999999999995,2476.8845" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="587.6605" y="2476.8845" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">More active tasks?</text>
+</g>
+</svg>
