@@ -64,6 +64,20 @@ SKILLS: dict[str, CompanionSkill] = {
             "cp -r mina-ralph-loop-bootstrap-python-cli/companion-skills/mina-uv-pytest-unit-testing ~/.codex/skills/mina-uv-pytest-unit-testing",
         ),
     ),
+    "mina-rich-cli-interface": CompanionSkill(
+        name="mina-rich-cli-interface",
+        repo_url="https://github.com/stevennana/mina-ralph-loop-bootstrap-python-cli.git",
+        repo_name="mina-ralph-loop-bootstrap-python-cli",
+        source_path="companion-skills/mina-rich-cli-interface",
+        install_name="mina-rich-cli-interface",
+        area="cli-ux",
+        purpose="Rich-powered terminal interface guidance for Mina Python CLI repos",
+        recommended_stage="later",
+        pinned_commands=(
+            "git clone https://github.com/stevennana/mina-ralph-loop-bootstrap-python-cli.git",
+            "cp -r mina-ralph-loop-bootstrap-python-cli/companion-skills/mina-rich-cli-interface ~/.codex/skills/mina-rich-cli-interface",
+        ),
+    ),
 }
 
 DEFAULT_STARTUP_SKILL_NAMES = ("clean-architecture",)

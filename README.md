@@ -116,15 +116,17 @@ The bootstrap should check whether that skill is already installed before deeper
 Desired later companion skills for Python CLI repos are:
 
 - `python-packaging-release` for console entry points, package layout, installability, and publish workflow design
-- `cli-ux-typer-rich` for Typer command trees, shell completion, Rich output patterns, and terminal ergonomics
+- `mina-rich-cli-interface` for Rich-powered terminal ergonomics, structured output, progress feedback, and operator-facing tracebacks
 - `config-and-secrets` for settings precedence, dotenv support, and secret-source policy
 - `mina-uv-pytest-unit-testing` for pytest unit, integration, and CLI E2E strategy aligned to the Mina Python CLI harness
 - `systemd-worker-ops` for long-running worker service units, restart behavior, and runtime log handling
 
-`clean-architecture` remains the only startup-default companion skill, but `mina-uv-pytest-unit-testing` is now encoded in this repo as a later-stage installable companion skill:
+`clean-architecture` remains the only startup-default companion skill, but `mina-rich-cli-interface` and `mina-uv-pytest-unit-testing` are now encoded in this repo as later-stage installable companion skills:
 
 ```bash
 python3 <skill>/scripts/companion_skills.py status --all
+python3 <skill>/scripts/companion_skills.py install mina-rich-cli-interface
+python3 <skill>/scripts/companion_skills.py command mina-rich-cli-interface
 python3 <skill>/scripts/companion_skills.py install mina-uv-pytest-unit-testing
 python3 <skill>/scripts/companion_skills.py command mina-uv-pytest-unit-testing
 ```

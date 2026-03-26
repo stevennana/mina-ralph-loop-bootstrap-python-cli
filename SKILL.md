@@ -81,7 +81,7 @@ Pinned auto-install companion skill for this preset:
 Desired later companion skills for this preset are:
 
 - `python-packaging-release` for console entry points, package layout, installability, and publish flow
-- `cli-ux-typer-rich` for Typer command structure, shell completion, Rich output patterns, and operator-facing terminal ergonomics
+- `mina-rich-cli-interface` for Rich-powered terminal ergonomics, structured operator output, progress feedback, and tracebacks under a Typer CLI
 - `config-and-secrets` for environment-variable contracts, dotenv or secrets-file policy, and settings precedence
 - `mina-uv-pytest-unit-testing` for pytest-based unit, integration, and CLI E2E strategy under the Mina Python CLI harness
 - `systemd-worker-ops` for long-running service units, restart policy, environment wiring, and log handling
@@ -97,6 +97,7 @@ If the user allows companion skills:
 - do not block the bootstrap if the user declines or skips installation; continue with the built-in workflow
 - handle installs one skill at a time before the interview starts
 - after the startup install decision is resolved and the product shape is clearer, mention any of the desired later companion skills above only when they are clearly relevant to the repo being bootstrapped
+- `mina-rich-cli-interface` is already encoded in this repo and should be installed through `python3 <skill>/scripts/companion_skills.py install mina-rich-cli-interface` when the founder wants a Rich-based CLI interface
 - `mina-uv-pytest-unit-testing` is already encoded in this repo and should be installed through `python3 <skill>/scripts/companion_skills.py install mina-uv-pytest-unit-testing` when the founder wants stronger pytest/harness guidance
 - the other desired later skills should not be presented as installable until this repo encodes their real upstream repos and pinned install commands
 - use `python3 <skill>/scripts/companion_skills.py status` for the startup-default set and `python3 <skill>/scripts/companion_skills.py status --all` when you need to inspect both the startup and later Mina-owned encoded skills

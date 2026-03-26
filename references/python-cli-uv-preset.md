@@ -92,10 +92,11 @@ Keep `clean-architecture` as the pinned auto-install companion skill for this pr
 Also consider these desired later companion skills when the repo needs them and the user allows them:
 
 - `python-packaging-release` when the CLI should be installable, publishable, or packaged with stable entry points
-- `cli-ux-typer-rich` when the command tree, completion, terminal output, or interactive operator UX needs deliberate shaping
+- `mina-rich-cli-interface` when the founder wants a Rich-based CLI interface and operator-facing terminal UX becomes a design concern
 - `config-and-secrets` when environment handling, dotenv support, secret sources, or precedence rules need explicit policy
 - `mina-uv-pytest-unit-testing` when CLI E2E coverage, test-tier alignment, or pytest troubleshooting becomes central to the design
 - `systemd-worker-ops` when the generated worker is expected to run under `systemd` with explicit restart and logging behavior
 
+`mina-rich-cli-interface` is Mina-owned and installable through `scripts/companion_skills.py`.
 `mina-uv-pytest-unit-testing` is Mina-owned and installable through `scripts/companion_skills.py`.
 Do not present the other desired later skills as installable until their original upstream repos and pinned commands are encoded in `scripts/companion_skills.py`.
