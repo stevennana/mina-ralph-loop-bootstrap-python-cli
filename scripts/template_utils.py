@@ -41,6 +41,10 @@ def render_text(text: str, answers: dict[str, str], allow_missing: bool) -> tupl
     return rendered, missing
 
 
+def apply_source_mode(source: Path, destination: Path) -> None:
+    shutil.copymode(source, destination)
+
+
 def copy_rendered_tree(
     source_root: Path,
     destination_root: Path,
@@ -64,11 +68,12 @@ def copy_rendered_tree(
 
         if source.suffix in {".png", ".jpg", ".jpeg", ".svg", ".woff", ".woff2", ".ttf"}:
             shutil.copy2(source, destination)
-            continue
+        else:
+            rendered, missing = render_text(source.read_text(encoding="utf-8"), answers, allow_missing)
+            missing_keys.extend(missing)
+            destination.write_text(rendered, encoding="utf-8")
 
-        rendered, missing = render_text(source.read_text(encoding="utf-8"), answers, allow_missing)
-        missing_keys.extend(missing)
-        destination.write_text(rendered, encoding="utf-8")
+        apply_source_mode(source, destination)
 
     return sorted(set(missing_keys))
 
