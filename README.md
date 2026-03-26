@@ -48,7 +48,7 @@ It also keeps the practical Ralph rules:
 - `scripts/render_docs.py`: renders the baseline docs into a target repo
 - `scripts/install_scaffold.py`: installs the predefined Python CLI harness and starter app into a target repo
 - `scripts/install_ralph.py`: installs the Ralph assets into a target repo
-- `scripts/companion_skills.py`: checks, prints commands for, and installs the pinned companion skills
+- `scripts/companion_skills.py`: checks, prints commands for, and installs the encoded companion skills
 - `scripts/finalize_bootstrap_state.py`: archives the completed foundation task and leaves feature tasks queued for Ralph
 - `assets/templates/root/`: root-file templates
 - `assets/templates/docs/`: docs-tree templates for Python CLI repos
@@ -107,21 +107,17 @@ Current v1 limitations:
 
 ## Companion Skills
 
-The pinned auto-install companion-skill recommendation for this preset is:
+The startup-default companion skill for this preset is `clean-architecture`.
+The later Mina-owned installable companion skills are:
 
-- `clean-architecture` for boundary shaping and layered application design
+- `mina-rich-cli-interface`
+- `mina-uv-pytest-unit-testing`
 
-The bootstrap should check whether that skill is already installed before deeper product analysis starts, ask whether to auto-install it before the interview begins, default to the helper installer flow, and keep the pinned manual commands correct as fallback guidance.
+Use [`references/python-cli-uv-preset.md`](/Users/stevenna/PycharmProjects/mina-ralph-loop-bootstrap-python-cli/references/python-cli-uv-preset.md) as the detailed source of truth for:
 
-Desired later companion skills for Python CLI repos are:
-
-- `python-packaging-release` for console entry points, package layout, installability, and publish workflow design
-- `mina-rich-cli-interface` for Rich-powered terminal ergonomics, structured output, progress feedback, and operator-facing tracebacks
-- `config-and-secrets` for settings precedence, dotenv support, and secret-source policy
-- `mina-uv-pytest-unit-testing` for pytest unit, integration, and CLI E2E strategy aligned to the Mina Python CLI harness
-- `systemd-worker-ops` for long-running worker service units, restart behavior, and runtime log handling
-
-`clean-architecture` remains the only startup-default companion skill, but `mina-rich-cli-interface` and `mina-uv-pytest-unit-testing` are now encoded in this repo as later-stage installable companion skills:
+- which later companion skills are already installable
+- which later companion skills are still desired but not pinned
+- when each companion skill should be recommended
 
 ```bash
 python3 <skill>/scripts/companion_skills.py status --all
@@ -130,8 +126,6 @@ python3 <skill>/scripts/companion_skills.py command mina-rich-cli-interface
 python3 <skill>/scripts/companion_skills.py install mina-uv-pytest-unit-testing
 python3 <skill>/scripts/companion_skills.py command mina-uv-pytest-unit-testing
 ```
-
-The other desired later skills above should not be presented as installable until their original upstream repos are identified and encoded in `scripts/companion_skills.py`.
 
 ## Stall triage
 

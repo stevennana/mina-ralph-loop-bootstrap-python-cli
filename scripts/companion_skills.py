@@ -57,7 +57,7 @@ SKILLS: dict[str, CompanionSkill] = {
         source_path="companion-skills/mina-uv-pytest-unit-testing",
         install_name="mina-uv-pytest-unit-testing",
         area="testing",
-        purpose="uv-managed pytest tiers, CliRunner coverage, and harness troubleshooting for Mina Python CLI repos",
+        purpose="uv-managed pytest tiers, package/workspace troubleshooting, and CliRunner coverage for Mina Python CLI repos",
         recommended_stage="later",
         pinned_commands=(
             "git clone https://github.com/stevennana/mina-ralph-loop-bootstrap-python-cli.git",

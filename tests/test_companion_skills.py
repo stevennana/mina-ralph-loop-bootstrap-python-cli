@@ -35,19 +35,56 @@ class CompanionSkillTests(unittest.TestCase):
             "\n".join(SKILLS["mina-rich-cli-interface"].pinned_commands),
         )
 
-    def test_readme_documents_desired_python_cli_companion_skills(self) -> None:
+    def test_readme_points_to_reference_as_the_detailed_companion_skill_source(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-        for skill_name in [
-            "python-packaging-release",
-            "mina-rich-cli-interface",
-            "config-and-secrets",
-            "mina-uv-pytest-unit-testing",
-            "systemd-worker-ops",
-        ]:
+        self.assertIn("references/python-cli-uv-preset.md", readme)
+        for skill_name in ["mina-rich-cli-interface", "mina-uv-pytest-unit-testing"]:
             self.assertIn(skill_name, readme)
-        self.assertNotIn("cli-ux-typer-rich", readme)
+        self.assertNotIn("python-packaging-release", readme)
+        self.assertNotIn("config-and-secrets", readme)
+        self.assertNotIn("systemd-worker-ops", readme)
         self.assertIn("install mina-rich-cli-interface", readme)
         self.assertIn("install mina-uv-pytest-unit-testing", readme)
+
+    def test_skill_md_points_to_reference_for_later_companion_skill_policy(self) -> None:
+        skill = (REPO_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("references/python-cli-uv-preset.md", skill)
+        self.assertIn("mina-rich-cli-interface", skill)
+        self.assertIn("mina-uv-pytest-unit-testing", skill)
+        self.assertNotIn("python-packaging-release", skill)
+        self.assertNotIn("config-and-secrets", skill)
+        self.assertNotIn("systemd-worker-ops", skill)
+
+    def test_uv_pytest_skill_encodes_the_added_uv_workflow_guidance(self) -> None:
+        skill = (REPO_ROOT / "companion-skills" / "mina-uv-pytest-unit-testing" / "SKILL.md").read_text(encoding="utf-8")
+        reference = (
+            REPO_ROOT / "companion-skills" / "mina-uv-pytest-unit-testing" / "references" / "uv-testing-workflow.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("references/uv-testing-workflow.md", skill)
+        for phrase in [
+            "uv sync",
+            "uv init --package",
+            "uv tool install",
+            "uv tool upgrade",
+            "workspace = true",
+        ]:
+            self.assertIn(phrase, reference)
+
+    def test_rich_cli_skill_encodes_cli_design_guidance(self) -> None:
+        skill = (REPO_ROOT / "companion-skills" / "mina-rich-cli-interface" / "SKILL.md").read_text(encoding="utf-8")
+        for phrase in [
+            "Rich CLI / Command-Line UI Design Guidelines",
+            "Separate human output from machine output",
+            "--json",
+            "NO_COLOR",
+            "TERM=dumb",
+            "Interactive prompts must be optional",
+            "Use progress indicators honestly",
+            "Linux and macOS Service-Oriented CLI Guidance",
+            "When choosing between a prettier interface and a more reliable one, prefer reliability.",
+        ]:
+            self.assertIn(phrase, skill)
 
 
 if __name__ == "__main__":
