@@ -36,11 +36,13 @@ Open templates and copied Ralph assets only when needed:
 
 - `assets/templates/root/`
 - `assets/templates/docs/`
+- `assets/templates/scaffold/`
 - `assets/templates/ralph/`
 
 Use these scripts when bootstrapping:
 
 - `scripts/render_docs.py`
+- `scripts/install_scaffold.py`
 - `scripts/install_ralph.py`
 - `scripts/companion_skills.py`
 - `scripts/finalize_bootstrap_state.py`
@@ -206,6 +208,8 @@ The generated preset should default to:
 - a pluggable storage port with a default local adapter
 - a sample task-queue vertical slice
 - deterministic command targets implemented through `make` wrappers over `uv run ...`
+- predefined harness config in `pyproject.toml` for pytest, Ruff, mypy, and console entry points
+- a generated `Makefile`, `src/<package>/` layout, `.env.example`, and baseline tests for unit, integration, and CLI E2E coverage
 
 Required generated operator/developer commands:
 
@@ -220,6 +224,12 @@ Required generated operator/developer commands:
 - `make worker-logged`
 
 If the repo shape needs a different command surface, update the generated docs and Ralph assets immediately so the contract stays consistent.
+
+Install the scaffold with:
+
+```bash
+python3 <skill>/scripts/install_scaffold.py --repo-root <target-repo> --answers /tmp/ralph-bootstrap-answers.json
+```
 
 ### 5. Install and adapt Ralph
 

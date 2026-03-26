@@ -20,6 +20,7 @@
   ],
   "required_files": [
     "pyproject.toml",
+    "Makefile",
     "scripts/ralph/run-once.sh",
     "docs/exec-plans/active/index.md"
   ],
@@ -38,7 +39,7 @@ Bootstrap the repository so it has a coherent docs tree, a minimal Python CLI sc
 ## Scope
 
 - generate the baseline docs
-- create the minimal scaffold
+- create the predefined Python CLI harness scaffold
 - install the Ralph loop
 - expose deterministic commands
 - expose an operator-visible `make worker-logged` path and documented process log levels
@@ -52,7 +53,7 @@ Bootstrap the repository so it has a coherent docs tree, a minimal Python CLI sc
 ## Exit criteria
 
 1. The baseline docs exist.
-2. The Python CLI scaffold exists.
+2. The Python CLI scaffold exists with predefined pytest, Ruff, mypy, and Makefile config.
 3. The Ralph scripts exist.
 4. `make verify` passes.
 5. `make worker-smoke` passes.

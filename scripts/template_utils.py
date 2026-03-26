@@ -41,6 +41,16 @@ def render_text(text: str, answers: dict[str, str], allow_missing: bool) -> tupl
     return rendered, missing
 
 
+def render_relative_path(relative: Path, answers: dict[str, str], allow_missing: bool) -> tuple[Path, list[str]]:
+    rendered_parts: list[str] = []
+    missing_keys: list[str] = []
+    for part in relative.parts:
+        rendered_part, missing = render_text(part, answers, allow_missing)
+        rendered_parts.append(rendered_part)
+        missing_keys.extend(missing)
+    return Path(*rendered_parts), missing_keys
+
+
 def apply_source_mode(source: Path, destination: Path) -> None:
     shutil.copymode(source, destination)
 
@@ -55,7 +65,8 @@ def copy_rendered_tree(
 ) -> list[str]:
     missing_keys: list[str] = []
     for source in sorted(source_root.rglob("*")):
-        relative = source.relative_to(source_root)
+        relative, path_missing = render_relative_path(source.relative_to(source_root), answers, allow_missing)
+        missing_keys.extend(path_missing)
         destination = destination_root / relative
 
         if source.is_dir():

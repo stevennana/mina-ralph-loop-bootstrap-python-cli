@@ -32,6 +32,7 @@ When enhancing this skill, preserve these invariants:
 - `SKILL.md` remains the operating contract for another Codex instance.
 - The references define stop conditions and baseline requirements; code and templates must agree with them.
 - Generated repos must expose deterministic commands for lint, typecheck, unit tests, integration tests, CLI E2E tests, verification, worker smoke, and logged worker startup.
+- Generated repos must start with predefined harness config, not ad hoc setup instructions: `pyproject.toml`, `Makefile`, pytest defaults, Ruff defaults, mypy defaults, a `src/` package, and baseline tests should all be scaffolded by the skill.
 - Multiple feature fronts should not collapse into one generic product spec and one oversized first-slice task.
 - Each non-hardening executable task should usually map to exactly one product spec.
 - A single product spec may legitimately map to multiple non-hardening exec-plans when that keeps the slices narrow.
@@ -75,9 +76,10 @@ Before changing behavior, read these files in order:
 6. `references/python-cli-uv-preset.md`
 7. `references/operator-logging.md`
 8. `scripts/render_docs.py`
-9. `scripts/install_ralph.py`
-10. `scripts/companion_skills.py`
-11. the relevant files under `assets/templates/`
+9. `scripts/install_scaffold.py`
+10. `scripts/install_ralph.py`
+11. `scripts/companion_skills.py`
+12. the relevant files under `assets/templates/`
 
 ## Enhancement Rules
 

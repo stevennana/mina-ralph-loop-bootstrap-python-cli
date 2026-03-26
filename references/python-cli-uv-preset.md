@@ -47,11 +47,26 @@ For this skill, `make verify` is not advisory. Generated task contracts should t
 - one multi-command Typer CLI
 - one minimal domain/service path
 - a pluggable storage boundary with a default local adapter
+- a local file-backed task queue so the worker path has real durable state from day one
 - one unit test
+- one integration test
 - one CLI E2E smoke test
 - deterministic commands wired before the Ralph loop is considered ready
-- if the app uses persistent runtime state, a worker smoke proves the runtime path is viable
+- a worker smoke proves the runtime path is viable for the default preset
 - the repo exposes `make worker-logged` so operators can inspect real process behavior
+
+## Predefined Harness Defaults
+
+The scaffold should ship with concrete defaults, not just tool names:
+
+- `pyproject.toml` with `uv`-friendly package metadata and a console-script entry point
+- runtime dependencies for Typer, Rich, Pydantic, and Pydantic Settings
+- dev dependencies for pytest, pytest-cov, Ruff, and mypy
+- pytest configured with strict markers and three explicit tiers: unit, integration, and E2E
+- Ruff configured for import sorting plus a small, opinionated lint baseline
+- mypy configured with strict checking over `src/`
+- a `Makefile` that wraps all required commands over `uv run ...`
+- `.env.example` showing the log level and state-directory contract
 
 ## Ralph alignment
 

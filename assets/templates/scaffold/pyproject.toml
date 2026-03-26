@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "{{DIST_PACKAGE_NAME}}"
+version = "0.1.0"
+description = "{{ONE_LINE_PRODUCT}}"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.8",
+  "pydantic-settings>=2.3",
+  "rich>=13.7",
+  "typer>=0.12",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.10",
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+"{{CLI_COMMAND_NAME}}" = "{{PYTHON_PACKAGE_NAME}}.cli.app:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{PYTHON_PACKAGE_NAME}}"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+  "integration: exercises filesystem or runtime boundaries",
+  "e2e: exercises CLI behavior end-to-end",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+packages = ["{{PYTHON_PACKAGE_NAME}}"]
+strict = true
+warn_unused_configs = true
+
+[tool.coverage.run]
+source = ["{{PYTHON_PACKAGE_NAME}}"]

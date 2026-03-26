@@ -46,11 +46,13 @@ It also keeps the practical Ralph rules:
 - `SKILL.md`: operating contract for Codex
 - `references/`: harness model, doc baseline, interview checklist, Python CLI preset, and continuation rules
 - `scripts/render_docs.py`: renders the baseline docs into a target repo
+- `scripts/install_scaffold.py`: installs the predefined Python CLI harness and starter app into a target repo
 - `scripts/install_ralph.py`: installs the Ralph assets into a target repo
 - `scripts/companion_skills.py`: checks, prints commands for, and installs the pinned companion skills
 - `scripts/finalize_bootstrap_state.py`: archives the completed foundation task and leaves feature tasks queued for Ralph
 - `assets/templates/root/`: root-file templates
 - `assets/templates/docs/`: docs-tree templates for Python CLI repos
+- `assets/templates/scaffold/`: predefined Python CLI harness, app, and test templates
 - `assets/templates/ralph/`: Ralph loop adaptation base copied into target repos
 
 ## Generated Repo Contract
@@ -60,7 +62,9 @@ Generated repositories should be docs-first Python CLI projects with:
 - `uv` for package and environment management
 - `typer`, `rich`, `pydantic`, and `pydantic-settings` for the default CLI/runtime shape
 - a layered `src/<package>/` layout with `domain`, `application`, `infrastructure`, `cli`, and `worker` boundaries
-- a sample task-queue workflow that proves a real CLI slice
+- a predefined `pyproject.toml` with pytest, Ruff, mypy, coverage, and console-script defaults
+- a generated `Makefile`, `.env.example`, local file-backed task queue, and starter tests under `tests/unit`, `tests/integration`, and `tests/e2e`
+- a sample task-queue workflow that proves a real CLI slice and gives the worker a real runtime path to exercise
 - deterministic command targets such as:
   - `make lint`
   - `make typecheck`
@@ -71,7 +75,7 @@ Generated repositories should be docs-first Python CLI projects with:
   - `make worker-smoke`
   - `make worker-logged`
 
-The `make` targets are wrappers over `uv run ...` commands so operators get short, consistent promotion gates on macOS and Linux.
+The `make` targets are wrappers over `uv run ...` commands so operators get short, consistent promotion gates on macOS and Linux, and the harness starts in a usable state instead of requiring hand-written toolchain setup.
 
 ## Workflow
 
@@ -85,7 +89,7 @@ The skill is meant to run in this order:
 6. improve the supporting architecture/design/product docs until they are specific enough
 7. generate smaller exec-plan pages for individual features
 8. review each exec-plan page one by one and loop on quality if needed
-9. scaffold the Python CLI app to match the docs
+9. install the predefined Python CLI harness and starter app to match the docs
 10. install and adapt the Ralph loop
 11. finalize the bootstrap task state without running feature tasks
 12. seed the initial active task queue
