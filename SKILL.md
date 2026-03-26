@@ -69,23 +69,32 @@ Do not assume a helper, command, adapter, or test is missing just because the fi
 
 ### 1b. Check companion skills before discovery
 
-Before product analysis and before the first substantive founder question, check whether the pinned companion skill set is already installed under `~/.codex/skills`.
+Before product analysis and before the first substantive founder question, check whether the pinned auto-install companion skill set is already installed under `~/.codex/skills`.
 Use `python3 <skill>/scripts/companion_skills.py status` as the source of truth.
 
-Recommended companion skill for this preset:
+Pinned auto-install companion skill for this preset:
 
 - `clean-architecture` for architecture and boundary shaping
+
+Additional companion skill areas that are often useful for this preset when already installed or when the founder explicitly wants them:
+
+- `python-packaging-release` for console entry points, package layout, installability, and release/publish workflow shaping
+- `cli-ux-typer-rich` for Typer command structure, shell completion, Rich output patterns, and operator-facing terminal ergonomics
+- `config-and-secrets` for environment-variable contracts, dotenv or secrets-file policy, and settings precedence
+- `cli-testing-observability` for pytest-based CLI E2E strategy, log assertions, and operator-visible diagnostics
+- `systemd-worker-ops` for long-running worker service units, restart policy, environment wiring, and log handling
 
 If the user allows companion skills:
 
 - treat this as a startup prerequisite step before product analysis and interview work
-- if the skill is already installed, plan to use it during product analysis, interview framing, docs generation, and architecture/spec shaping
+- if the pinned skill is already installed, plan to use it during product analysis, interview framing, docs generation, and architecture/spec shaping
 - if it is missing, summarize that missing pinned companion skill up front
 - ask whether the user wants it auto-installed before product analysis and interview start
 - default to the helper installer flow (`python3 <skill>/scripts/companion_skills.py install clean-architecture`) instead of leading with manual clone/copy commands
 - print manual clone/copy commands only as fallback guidance, or if the user explicitly asks for manual installation
 - do not block the bootstrap if the user declines or skips installation; continue with the built-in workflow
 - handle installs one skill at a time before the interview starts
+- after the startup install decision is resolved and the product shape is clearer, mention any of the additional companion-skill areas above only when they are clearly relevant to the repo being bootstrapped
 
 ### 2. Interview until the docs are decision-complete
 

@@ -3,7 +3,8 @@
 Use this checklist to decide whether the user's answers are complete enough to write the docs and queue without guessing.
 Pick the interview lane first instead of treating every repo like a fresh v1 bootstrap.
 Preferred interaction style: before the first substantive product question, first handle companion-skill guidance and resolve the install decision, then review the product/reference context, then in a separate prompt recommend `Plan` mode if the user wants selectable option lists, then in a separate prompt tell the user to say `continue` when ready; after that, ask one question at a time, give suggested options when useful, and always allow a free-form answer.
-Before the first substantive product question, check whether the pinned companion skill set is installed and, if the user allows it, summarize the missing companion skill, ask whether to auto-install it before product analysis and documentation starts, use the helper installer flow by default, and then handle that install before the interview.
+Before the first substantive product question, check whether the pinned auto-install companion skill set is installed and, if the user allows it, summarize the missing pinned skill, ask whether to auto-install it before product analysis and documentation starts, use the helper installer flow by default, and then handle that install before the interview.
+After that startup decision is resolved and only when the product shape makes it clearly relevant, mention any useful non-pinned companion-skill areas such as packaging/release, CLI UX, config/secrets, testing/observability, or worker operations.
 Keep the printed manual commands aligned with the actual upstream repo paths.
 
 ## Choose The Interview Lane

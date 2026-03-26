@@ -70,3 +70,14 @@ Keep these defaults aligned unless there is a strong reason not to:
 - Ensure external-resource features are represented in CLI E2E coverage before the related task is promotable.
 - If the app depends on DB or runtime preparation, do not leave the worker path unproven.
 - Do not leave operators blind during manual verification; wire `make worker-logged`, `logs/`, and log-level configuration into the generated repo contract.
+
+## Useful Companion Skill Areas
+
+Keep `clean-architecture` as the pinned auto-install companion skill for this preset.
+Also consider these companion-skill areas when the repo needs them and the user allows them:
+
+- `python-packaging-release` when the CLI should be installable, publishable, or packaged with stable entry points
+- `cli-ux-typer-rich` when the command tree, completion, terminal output, or interactive operator UX needs deliberate shaping
+- `config-and-secrets` when environment handling, dotenv support, secret sources, or precedence rules need explicit policy
+- `cli-testing-observability` when CLI E2E coverage, log assertions, or operator debugging ergonomics become central to the design
+- `systemd-worker-ops` when the generated worker is expected to run under `systemd` with explicit restart and logging behavior

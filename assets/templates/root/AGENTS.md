@@ -51,7 +51,7 @@ For manual process inspection, prefer `make worker-logged` and set `LOG_LEVEL` i
 
 ## Optional Companion Skills
 - If the customer allows them and they are installed, consider relevant companion skills before planning or implementation.
-- Good candidates include clean-architecture and other skills directly relevant to the chosen integrations.
+- Good candidates include `clean-architecture` for boundaries, packaging/release skills for installable CLIs, Typer/Rich CLI UX skills for command and terminal design, config/secrets skills for settings policy, testing/observability skills for CLI and logging coverage, and worker-ops skills for `systemd` supervision.
 
 ## Done Definition
 {{DONE_DEFINITION}}
