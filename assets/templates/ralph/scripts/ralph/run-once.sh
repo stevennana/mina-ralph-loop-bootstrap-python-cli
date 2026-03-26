@@ -171,6 +171,74 @@ stop_worker_process() {
   fi
 }
 
+read_json_field() {
+  local file_path="$1"
+  local expression="$2"
+  node -e '
+const fs = require("fs");
+const [filePath, expression] = process.argv.slice(1);
+const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+const value = Function("data", `return (${expression});`)(data);
+if (value === undefined || value === null) process.exit(0);
+if (typeof value === "object") {
+  process.stdout.write(JSON.stringify(value));
+} else {
+  process.stdout.write(String(value));
+}
+' "$file_path" "$expression"
+}
+
+record_blocker() {
+  local kind="$1"
+  shift
+  local output_path="${CYCLE_DIR}/blocker-${kind}.json"
+  local error_path="${output_path}.log"
+  if node scripts/ralph/record-blocker.mjs --kind "$kind" "$@" >"$output_path" 2>"$error_path"; then
+    :
+  else
+    append_log "- blocker: failed to record ${kind} -> ${error_path}"
+    return 1
+  fi
+
+  local recorded summary repeat_count signature
+  recorded="$(read_json_field "$output_path" "data.recorded")"
+  if [[ "$recorded" != "true" ]]; then
+    return 1
+  fi
+  summary="$(read_json_field "$output_path" "data.summary")"
+  repeat_count="$(read_json_field "$output_path" "data.repeat_count")"
+  signature="$(read_json_field "$output_path" "data.signature")"
+  append_log "- blocker: signature=${signature} repeat=${repeat_count} kind=${kind} ${summary}"
+  printf '%s\n' "$output_path"
+}
+
+branch_blocker_if_needed() {
+  local blocker_record_path="$1"
+  if [[ -z "$blocker_record_path" || ! -f "$blocker_record_path" ]]; then
+    return 1
+  fi
+
+  local threshold_reached
+  threshold_reached="$(read_json_field "$blocker_record_path" "data.threshold_reached")"
+  if [[ "$threshold_reached" != "true" ]]; then
+    return 1
+  fi
+
+  local branch_output="${CYCLE_DIR}/blocker-branch.json"
+  local branch_error="${branch_output}.log"
+  if node scripts/ralph/branch-rca-task.mjs >"$branch_output" 2>"$branch_error"; then
+    local rca_task_id blocker_signature
+    rca_task_id="$(read_json_field "$branch_output" "data.rca_task_id")"
+    blocker_signature="$(read_json_field "$branch_output" "data.blocker_signature")"
+    append_log "- blocker: auto-branched signature=${blocker_signature} -> ${rca_task_id}"
+    printf '%s\n' "$branch_output"
+    return 0
+  fi
+
+  append_log "- blocker: RCA branch failed -> ${branch_error}"
+  return 1
+}
+
 TASK_ID="$(tr -d '\n' < state/current-task.txt || true)"
 if [[ -z "${TASK_ID}" || "${TASK_ID}" == "NONE" ]]; then
   echo "No active task. Exiting run-once."
@@ -245,7 +313,21 @@ fi
 
 if (( WORKER_STALLED )); then
   write_stall_result "$STALL_ARTIFACT_PATH" "$STALL_DETECTED_AT"
+  STALL_BLOCKER_PATH="$(record_blocker "stall" --artifact "$STALL_ARTIFACT_PATH" --worker-log "$WORKER_LOG" || true)"
   append_health_mark "!"
+  if BRANCH_OUTPUT_PATH="$(branch_blocker_if_needed "${STALL_BLOCKER_PATH:-}")"; then
+    BACKLOG_LOG="${CYCLE_DIR}/backlog.log"
+    write_cycle_state "backlog" "running"
+    if node scripts/ralph/render-backlog.mjs >"$BACKLOG_LOG" 2>&1; then
+      NEXT_TASK="$(tr -d '\n' < state/current-task.txt || true)"
+      append_log "- backlog: rendered current=${NEXT_TASK:-NONE}"
+    else
+      append_log "- backlog: failed -> ${BACKLOG_LOG}"
+    fi
+    write_cycle_state "finished" "finished"
+    append_log "- cycle: finished"
+    exit 0
+  fi
   exit "$STALL_EXIT_CODE"
 fi
 
@@ -275,6 +357,16 @@ const head = `status=${data.status ?? "unknown"} promotion=${String(data.promoti
 process.stdout.write(summary ? `${head} ${summary}` : head);
 ')"
   append_log "- evaluator: ${EVALUATION_SUMMARY} -> ${EVALUATOR_LOG}"
+  NEXT_SERVER_LOG_PATH="$(node -e '
+const fs = require("fs");
+const data = JSON.parse(fs.readFileSync("state/evaluation.json", "utf8"));
+const commands = Array.isArray(data?.deterministic?.commands) ? data.deterministic.commands : [];
+const logPath = commands.find((command) => typeof command?.next_server_log_path === "string")?.next_server_log_path ?? "";
+process.stdout.write(logPath);
+')"
+  if [[ -n "${NEXT_SERVER_LOG_PATH}" ]]; then
+    append_log "- runtime-log: ${NEXT_SERVER_LOG_PATH}"
+  fi
 else
   append_log "- evaluator: failed -> ${EVALUATOR_LOG}"
 fi
@@ -285,6 +377,29 @@ if ./scripts/ralph/commit-if-changed.sh >"$COMMIT_LOG" 2>&1; then
   append_log "- commit: $(last_nonempty_line "$COMMIT_LOG")"
 else
   append_log "- commit: failed -> ${COMMIT_LOG}"
+fi
+
+BLOCKER_RECORD_PATH=""
+if [[ -f state/evaluation.json ]]; then
+  PROMOTION_ELIGIBLE="$(read_json_field state/evaluation.json "data.promotion_eligible")"
+  if [[ "$PROMOTION_ELIGIBLE" != "true" ]]; then
+    BLOCKER_RECORD_PATH="$(record_blocker "evaluation" || true)"
+  fi
+fi
+
+if BRANCH_OUTPUT_PATH="$(branch_blocker_if_needed "${BLOCKER_RECORD_PATH:-}")"; then
+  BACKLOG_LOG="${CYCLE_DIR}/backlog.log"
+  write_cycle_state "backlog" "running"
+  if node scripts/ralph/render-backlog.mjs >"$BACKLOG_LOG" 2>&1; then
+    NEXT_TASK="$(tr -d '\n' < state/current-task.txt || true)"
+    append_log "- backlog: rendered current=${NEXT_TASK:-NONE}"
+  else
+    append_log "- backlog: failed -> ${BACKLOG_LOG}"
+  fi
+  append_health_mark "x"
+  write_cycle_state "finished" "finished"
+  append_log "- cycle: finished"
+  exit 0
 fi
 
 PROMOTE_LOG="${CYCLE_DIR}/promote.log"

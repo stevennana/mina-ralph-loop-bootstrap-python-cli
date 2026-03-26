@@ -112,9 +112,15 @@ export function renderBacklogMarkdown(tasks, currentTaskId) {
   const lines = ["# Backlog", ""];
   for (const task of tasks) {
     const isCurrent = normalizeTaskId(task.id) === normalizeTaskId(currentTaskId);
-    const marker = task.meta.status === "completed" ? "x" : " ";
+    const marker =
+      task.meta.status === "completed"
+        ? "x"
+        : task.meta.status === "blocked"
+          ? "!"
+          : " ";
     const currentTag = isCurrent ? " ← current" : "";
-    lines.push(`- [${marker}] ${task.id} — ${task.meta.title}${currentTag}`);
+    const statusTag = task.meta.status === "blocked" ? " (blocked)" : "";
+    lines.push(`- [${marker}] ${task.id} — ${task.meta.title}${statusTag}${currentTag}`);
   }
   lines.push("");
   return `${lines.join("\n")}\n`;

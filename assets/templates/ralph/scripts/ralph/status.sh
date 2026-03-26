@@ -30,5 +30,10 @@ echo ""
 echo "Latest completed evaluation:"
 cat state/evaluation.json
 echo ""
+
+echo "Blocker tracker:"
+cat state/blocker-tracker.json
+echo ""
+
 echo "Backlog:"
 cat state/backlog.md

@@ -56,6 +56,14 @@ Inspect the target repository first.
 - If the repo already has the docs tree and Ralph loop installed, determine whether this is a continuation run for the next feature wave instead of a fresh bootstrap.
 - Do not install the Ralph loop into a mature repo without first checking whether the existing layout, commands, and docs can support it cleanly.
 
+For continuation runs:
+
+- inspect `docs/exec-plans/active/`
+- inspect `docs/exec-plans/completed/`
+- inspect the current product specs and design docs
+- identify what feature area or operator-visible expansion the founder wants next
+- preserve completed plans as history rather than rewriting them
+
 Before making implementation claims or writing replacement code, search the codebase first.
 Do not assume a helper, command, adapter, or test is missing just because the first search result was incomplete.
 
@@ -68,26 +76,33 @@ Recommended companion skill for this preset:
 
 - `clean-architecture` for architecture and boundary shaping
 
-If the skill is missing:
+If the user allows companion skills:
 
-- summarize the missing skill up front
-- ask whether the user wants it auto-installed before product analysis starts
-- default to the helper installer flow
-- do not block the bootstrap if the user declines
+- treat this as a startup prerequisite step before product analysis and interview work
+- if the skill is already installed, plan to use it during product analysis, interview framing, docs generation, and architecture/spec shaping
+- if it is missing, summarize that missing pinned companion skill up front
+- ask whether the user wants it auto-installed before product analysis and interview start
+- default to the helper installer flow (`python3 <skill>/scripts/companion_skills.py install clean-architecture`) instead of leading with manual clone/copy commands
+- print manual clone/copy commands only as fallback guidance, or if the user explicitly asks for manual installation
+- do not block the bootstrap if the user declines or skips installation; continue with the built-in workflow
+- handle installs one skill at a time before the interview starts
 
 ### 2. Interview until the docs are decision-complete
 
 Ask the user questions in stages, not all at once.
-Before the first substantive product question, follow this startup order:
+Before the first substantive product question, follow this exact startup order:
 
 1. companion skill recommendation and installation decision
 2. if the user accepts installs, complete that flow first
-3. then give the `Plan` mode recommendation
-4. then give a short handoff telling the user to say `continue` when ready
-5. only after that, ask the first substantive product question
+3. only after the install decision flow is resolved, begin product analysis/reference review
+4. then give the `Plan` mode recommendation
+5. then give a short handoff telling the user to say `continue` when ready
+6. only after that, ask the first substantive product question
 
 Do not combine the handoff with the first product question.
 Do not combine the companion-skill installation decision with the `continue` handoff in the same prompt.
+Do not repeat the startup guidance twice.
+At the startup handoff stage, do not ask for product intent yet; wait for the user to say `continue` or otherwise clearly indicate readiness.
 
 The interview must make the test strategy explicit before scaffolding starts.
 Do not accept vague answers like “we should have decent coverage” or “we can add tests later.”
@@ -105,8 +120,13 @@ You need a clear statement of:
 
 If a feature depends on an outside resource such as AI chat, a third-party API, email delivery, remote storage, or another integration, require that feature to appear in an E2E scenario before the related task can promote.
 
+For continuation runs, do a delta interview rather than repeating the full bootstrap interview.
+Ask only what is needed to define the next feature tranche and its tests without guessing.
+
 Use [references/interview-checklist.md](references/interview-checklist.md) as the stop condition.
 Do not start writing the docs until the answers are sufficient to fill the required markdown set in [references/doc-baseline.md](references/doc-baseline.md).
+If the test strategy is still ambiguous, keep asking.
+For continuation runs, also use [references/expansion-mode.md](references/expansion-mode.md) to decide whether the next wave is specific enough to write new specs and active plans.
 
 ### 3. Materialize the docs tree first
 
@@ -126,10 +146,44 @@ Then expand the rendered docs into project-specific content.
 
 - Replace any remaining generic placeholders.
 - Add project-specific design docs and product specs beyond the baseline templates whenever the product has more than one distinct feature front.
-- If the user provides local or online references, analyze them into `docs/references/`.
+- If the user provides local or online references, analyze them into `docs/references/` and preserve the useful project-specific takeaways there.
 - Ensure `AGENTS.md` stays short and points into the docs tree.
 - Ensure active execution plans contain real `taskmeta` blocks and deterministic checks.
 - Ensure the docs clearly state that promotion is blocked when required commands fail.
+- Use [references/feature-slicing.md](references/feature-slicing.md) to decide how many product specs and executable tasks are needed.
+
+If `FEATURE_SPECS` is present and `EXEC_TASKS` is omitted, `scripts/render_docs.py` will derive a queue whose size follows the selected `SLICE_SIZE` and `BACKLOG_DEPTH` controls. Multiple exec-plans may map to the same product spec when that is required to keep the slices narrow.
+If `EXEC_TASKS` is provided but still collapses multiple product specs into broad tasks, the renderer should fail instead of silently accepting the queue.
+
+For continuation runs:
+
+- update the existing product specs before adding new active plans
+- add or revise design docs when the new feature changes system shape or boundaries
+- update quality, reliability, and security docs if the new wave changes their posture
+- keep `docs/references/` current when new user-provided references appear
+- leave completed plan history intact
+- stop after the docs and next active queue are refreshed; do not begin app-code implementation in the same continuation run
+
+### 3b. Improve supporting docs before writing exec-plans
+
+Before writing or revising exec-plans:
+
+- review the relevant product, CLI surface, architecture, and design docs together
+- enhance those docs if the feature description is still rough
+- use installed companion skills during design and architecture work when they are available and relevant
+- do not create exec-plan pages from weak supporting docs
+
+### 3c. Generate smaller exec-plan pages
+
+Create exec-plan pages only after the supporting docs are sufficiently detailed.
+
+Rules:
+
+- create one exec-plan page per small feature slice
+- avoid broad milestone-style scopes
+- keep each non-hardening plan focused on one feature front
+- allow multiple exec-plan pages to point at the same product spec when that keeps the work narrow
+- review each exec-plan page individually before handoff
 
 ### 4. Scaffold the Python CLI preset
 

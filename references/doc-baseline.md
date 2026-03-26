@@ -45,6 +45,7 @@ Generate this baseline before treating the Ralph loop as installed.
 - `tech-debt-tracker.md`
 - create `completed/` even if empty
 - if the product has multiple major features, the initial queue should contain multiple small feature-sliced tasks rather than a single omnibus “first slice”
+- supporting architecture/design/product docs should be detailed enough that each plan page can be written without guessing
 
 ## `docs/generated/`
 
@@ -60,6 +61,8 @@ Examples:
 - CLI contract notes
 - provider request/response shapes
 - process supervision or logging contracts
+
+If the user provides local or online references, analyze them into `docs/references/` and keep the useful project-specific information in-repo for future implementation and later feature waves.
 
 ## Stop Condition
 

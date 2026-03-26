@@ -20,10 +20,10 @@ Use a strict forward-only dependency shape inside each domain:
 
 ## CLI / Worker Shape
 ### CLI
-{{FRONTEND_SHAPE_BULLETS}}
+{{CLI_SHAPE_BULLETS}}
 
 ### Worker
-{{SERVER_SHAPE_BULLETS}}
+{{WORKER_SHAPE_BULLETS}}
 
 ## Persistence Strategy
 {{PERSISTENCE_STRATEGY_BULLETS}}

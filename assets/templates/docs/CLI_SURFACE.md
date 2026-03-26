@@ -10,16 +10,16 @@ Describe the operator-facing command surface of {{PROJECT_NAME}} so an agent can
 - worker/runtime commands for unattended operation
 
 ## Command Groups
-{{ROUTE_MAP_MARKDOWN}}
+{{COMMAND_GROUPS_MARKDOWN}}
 
 ## Primary Flows
-{{PRIMARY_SCREENS_MARKDOWN}}
+{{PRIMARY_FLOWS_MARKDOWN}}
 
 ## CLI Rules
-{{UI_RULES_BULLETS}}
+{{CLI_RULES_BULLETS}}
 
 ## Operator Notes
 {{SURFACE_NOTES_BULLETS}}
 
 ## CLI Non-Goals for v1
-{{FRONTEND_NON_GOALS_BULLETS}}
+{{CLI_NON_GOALS_BULLETS}}

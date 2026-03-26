@@ -1,28 +1,62 @@
 import fs from "node:fs";
 import path from "node:path";
+import { clearTaskBlockers } from "./lib/blocker-utils.mjs";
 import {
   ACTIVE_TASK_DIR,
   COMPLETED_TASK_DIR,
   appendTaskProgressNote,
+  ensureDir,
+  fileExists,
   findTaskDoc,
+  normalizeTaskId,
   readCurrentTaskId,
   readText,
   replaceTaskMeta,
   timestamp,
   writeCurrentTaskId,
   writeText,
-  fileExists,
-  ensureDir,
 } from "./lib/task-utils.mjs";
 
+const DEFAULT_MANUAL_PROMOTION_REASON = "operator manual promotion";
+
+function parseArgs(argv) {
+  const parsed = {
+    manual: false,
+    reason: DEFAULT_MANUAL_PROMOTION_REASON,
+    artifact: "",
+  };
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === "--manual") {
+      parsed.manual = true;
+      continue;
+    }
+    if (arg === "--reason") {
+      parsed.reason = argv[index + 1] ?? "";
+      index += 1;
+      continue;
+    }
+    if (arg === "--artifact") {
+      parsed.artifact = argv[index + 1] ?? "";
+      index += 1;
+      continue;
+    }
+    throw new Error(`Unknown argument: ${arg}`);
+  }
+
+  return parsed;
+}
+
+const options = parseArgs(process.argv.slice(2));
 const evaluationPath = path.join(process.cwd(), "state", "evaluation.json");
-if (!fileExists(evaluationPath)) {
+if (!options.manual && !fileExists(evaluationPath)) {
   console.log("No evaluation.json found; skipping promotion.");
   process.exit(0);
 }
 
-const evaluation = JSON.parse(readText(evaluationPath));
-if (!evaluation.promotion_eligible) {
+const evaluation = fileExists(evaluationPath) ? JSON.parse(readText(evaluationPath)) : null;
+if (!options.manual && !evaluation?.promotion_eligible) {
   console.log(`Task ${evaluation.task_id ?? "(unknown)"} not eligible for promotion.`);
   process.exit(0);
 }
@@ -36,17 +70,30 @@ if (!task) {
 
 const completedAt = timestamp();
 const nextTaskId = task.meta.next_task_on_success ?? null;
+const parentTaskId = task.meta.rca_for_task_id ?? null;
+const overrideArtifact = options.artifact.trim();
+const manualOverride = options.manual
+  ? {
+      reason: options.reason.trim() || DEFAULT_MANUAL_PROMOTION_REASON,
+      artifact: overrideArtifact || null,
+      previous_evaluation_status: evaluation?.status ?? null,
+      promoted_at: completedAt,
+    }
+  : null;
 
 const completedMeta = {
   ...task.meta,
   status: "completed",
   completed_at: completedAt,
+  ...(manualOverride ? { manual_override: manualOverride } : {}),
 };
 
 let completedMarkdown = replaceTaskMeta(task.markdown, completedMeta);
 completedMarkdown = appendTaskProgressNote(
   completedMarkdown,
-  `${completedAt}: automatically promoted after deterministic checks and evaluator approval.`,
+  manualOverride
+    ? `${completedAt}: manually promoted by operator override. Reason: ${manualOverride.reason}${manualOverride.artifact ? ` Artifact: ${manualOverride.artifact}.` : ""}`
+    : `${completedAt}: automatically promoted after deterministic checks and evaluator approval.`,
 );
 
 ensureDir(COMPLETED_TASK_DIR);
@@ -64,7 +111,18 @@ if (nextTaskId) {
       const nextMeta = JSON.parse(match[1].trim());
       if (nextMeta.status !== "completed") {
         nextMeta.status = "active";
-        writeText(nextTaskPath, replaceTaskMeta(nextMarkdown, nextMeta));
+        if (parentTaskId && normalizeTaskId(parentTaskId) === normalizeTaskId(nextTaskId)) {
+          delete nextMeta.blocked_by_task_id;
+          delete nextMeta.blocker_signature;
+          delete nextMeta.blocked_at;
+        }
+        const restoredMarkdown = appendTaskProgressNote(
+          replaceTaskMeta(nextMarkdown, nextMeta),
+          parentTaskId && normalizeTaskId(parentTaskId) === normalizeTaskId(nextTaskId)
+            ? `${completedAt}: blocker RCA task ${task.id} completed; restored as current task after resolving blocker ${task.meta.blocker_signature ?? "unknown"}.`
+            : `${completedAt}: restored as current task after ${task.id} promotion.`,
+        );
+        writeText(nextTaskPath, restoredMarkdown);
       }
     }
   }
@@ -73,7 +131,33 @@ if (nextTaskId) {
 }
 
 const historyPath = path.join(process.cwd(), "state", "task-history.md");
-const historyEntry = `- ${completedAt}: promoted ${task.id} -> ${nextTaskId ?? "NONE"}\n`;
+const historyEntry = manualOverride
+  ? `- ${completedAt}: manually promoted ${task.id} -> ${nextTaskId ?? "NONE"} | reason=${manualOverride.reason}${manualOverride.artifact ? ` | artifact=${manualOverride.artifact}` : ""}\n`
+  : `- ${completedAt}: promoted ${task.id} -> ${nextTaskId ?? "NONE"}\n`;
 fs.appendFileSync(historyPath, historyEntry, "utf8");
 
-console.log(`Promoted ${task.id} -> ${nextTaskId ?? "NONE"}`);
+clearTaskBlockers(task.id);
+if (parentTaskId) {
+  clearTaskBlockers(parentTaskId);
+}
+
+if (manualOverride) {
+  const manualEvaluation = {
+    checked_at: completedAt,
+    task_id: task.id,
+    status: "done",
+    promotion_eligible: true,
+    deterministic: evaluation?.deterministic ?? null,
+    llm: evaluation?.llm ?? null,
+    summary: `Task manually promoted by operator override. Reason: ${manualOverride.reason}`,
+    missing_requirements: evaluation?.missing_requirements ?? [],
+    manual_override: manualOverride,
+  };
+  writeText(evaluationPath, JSON.stringify(manualEvaluation, null, 2));
+}
+
+console.log(
+  manualOverride
+    ? `Manually promoted ${task.id} -> ${nextTaskId ?? "NONE"}`
+    : `Promoted ${task.id} -> ${nextTaskId ?? "NONE"}`
+);

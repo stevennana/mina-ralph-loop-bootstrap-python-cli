@@ -38,7 +38,7 @@ It also keeps the practical Ralph rules:
 - keep tasks narrow and promotion-oriented
 - prefer targeted checks while iterating, then use the required commands as the promotion gate
 - if a feature depends on an outside resource, require CLI E2E coverage before promotion
-- if the same environment-specific blocker repeats three times, branch into an RCA/fix exec-plan
+- if the same environment-specific blocker repeats three times, auto-branch it into an RCA/fix exec-plan and return to the parent task after promotion
 - if the app has persistent runtime state, prove the worker/runtime startup path explicitly instead of assuming typecheck or tests are enough
 
 ## Repository Layout
@@ -107,17 +107,17 @@ The default companion-skill recommendation for this preset is:
 
 - `clean-architecture` for boundary shaping and layered application design
 
-The bootstrap should check whether that skill is already installed before deeper product analysis starts.
+The bootstrap should check whether that skill is already installed before deeper product analysis starts, ask whether to auto-install it before the interview begins, default to the helper installer flow, and keep the pinned manual commands correct as fallback guidance.
 
 ## Stall triage
 
 Generated Ralph loops use a compact health line in `state/run-log.md`:
 
 - `o` = promoted success
-- `x` = completed non-promotion or failure
-- `!` = worker stalled and the loop stopped for triage
+- `x` = completed non-promotion, failure, or RCA auto-branch
+- `!` = worker stalled during that cycle
 
-Only repeated environment-specific blockers on the same task should branch into the RCA/fix exec-plan flow.
+Only repeated environment-specific blockers on the same task should branch into the RCA/fix exec-plan flow, and generated loops now auto-create that RCA task on the third identical blocker.
 
 ## Enable The Skill In A New Codex Project
 
