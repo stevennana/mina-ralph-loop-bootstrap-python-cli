@@ -78,13 +78,13 @@ Pinned auto-install companion skill for this preset:
 
 - `clean-architecture` for architecture and boundary shaping
 
-Additional companion skill areas that are often useful for this preset when already installed or when the founder explicitly wants them:
+Additional installable companion skills that are often useful for this preset once the product shape is clearer:
 
-- `python-packaging-release` for console entry points, package layout, installability, and release/publish workflow shaping
+- `python-packaging-release` for console entry points, package layout, installability, and publish flow
 - `cli-ux-typer-rich` for Typer command structure, shell completion, Rich output patterns, and operator-facing terminal ergonomics
 - `config-and-secrets` for environment-variable contracts, dotenv or secrets-file policy, and settings precedence
 - `cli-testing-observability` for pytest-based CLI E2E strategy, log assertions, and operator-visible diagnostics
-- `systemd-worker-ops` for long-running worker service units, restart policy, environment wiring, and log handling
+- `systemd-worker-ops` for long-running service units, restart policy, environment wiring, and log handling
 
 If the user allows companion skills:
 
@@ -96,7 +96,9 @@ If the user allows companion skills:
 - print manual clone/copy commands only as fallback guidance, or if the user explicitly asks for manual installation
 - do not block the bootstrap if the user declines or skips installation; continue with the built-in workflow
 - handle installs one skill at a time before the interview starts
-- after the startup install decision is resolved and the product shape is clearer, mention any of the additional companion-skill areas above only when they are clearly relevant to the repo being bootstrapped
+- after the startup install decision is resolved and the product shape is clearer, mention any of the later companion skills above only when they are clearly relevant to the repo being bootstrapped
+- when a later companion skill is recommended, guide installation through `python3 <skill>/scripts/companion_skills.py install <skill-name>` instead of sending the user or the bootstrap run to search for it again
+- use `python3 <skill>/scripts/companion_skills.py status --all` when you need to inspect both the startup default and the later installable companion skills
 
 ### 2. Interview until the docs are decision-complete
 

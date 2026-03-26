@@ -49,7 +49,7 @@ When enhancing this skill, preserve these invariants:
 - The startup guidance should summarize all relevant missing companion skills before asking about installation.
 - Companion-skill installs should be proposed and run one skill at a time before the interview starts.
 - The default startup install path should be the helper installer script, with manual commands as fallback only.
-- The skill should also recommend relevant non-pinned companion skill areas for Python CLI repos, especially packaging/release, CLI UX, config/secrets, testing/observability, and worker operations, but should not present them as auto-installable unless real install sources are encoded.
+- When later-stage Python CLI companion skills are recommended, the skill should name only the companion skills that this repo actually encodes and should guide installation through the helper installer instead of sending the bootstrap run back into catalog discovery.
 - When `FEATURE_SPECS` is present and `EXEC_TASKS` is omitted, the derived queue should follow explicit slice-size and backlog-depth controls instead of stopping at one task per feature spec.
 - When the founder does not specify queue sizing controls, the defaults should be `SLICE_SIZE=balanced` and `BACKLOG_DEPTH=10-15 tasks`.
 - Supporting architecture/design/product docs should be strengthened before exec-plan pages are written.
