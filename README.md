@@ -113,20 +113,23 @@ The pinned auto-install companion-skill recommendation for this preset is:
 
 The bootstrap should check whether that skill is already installed before deeper product analysis starts, ask whether to auto-install it before the interview begins, default to the helper installer flow, and keep the pinned manual commands correct as fallback guidance.
 
-Additional installable companion skills may be recommended later when relevant:
+Desired later companion skills for Python CLI repos are:
 
 - `python-packaging-release` for console entry points, package layout, installability, and publish workflow design
 - `cli-ux-typer-rich` for Typer command trees, shell completion, Rich output patterns, and terminal ergonomics
 - `config-and-secrets` for settings precedence, dotenv support, and secret-source policy
-- `cli-testing-observability` for pytest CLI E2E strategy, logging assertions, and operator-visible diagnostics
+- `mina-uv-pytest-unit-testing` for pytest unit, integration, and CLI E2E strategy aligned to the Mina Python CLI harness
 - `systemd-worker-ops` for long-running worker service units, restart behavior, and runtime log handling
 
-Those later skills are encoded in `scripts/companion_skills.py` and can be installed the same way as the startup skill, for example:
+`clean-architecture` remains the only startup-default companion skill, but `mina-uv-pytest-unit-testing` is now encoded in this repo as a later-stage installable companion skill:
 
 ```bash
 python3 <skill>/scripts/companion_skills.py status --all
-python3 <skill>/scripts/companion_skills.py install cli-ux-typer-rich
+python3 <skill>/scripts/companion_skills.py install mina-uv-pytest-unit-testing
+python3 <skill>/scripts/companion_skills.py command mina-uv-pytest-unit-testing
 ```
+
+The other desired later skills above should not be presented as installable until their original upstream repos are identified and encoded in `scripts/companion_skills.py`.
 
 ## Stall triage
 

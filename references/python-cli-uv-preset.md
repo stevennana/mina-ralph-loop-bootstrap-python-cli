@@ -89,12 +89,13 @@ Keep these defaults aligned unless there is a strong reason not to:
 ## Useful Companion Skill Areas
 
 Keep `clean-architecture` as the pinned auto-install companion skill for this preset.
-Also consider these later installable companion skills when the repo needs them and the user allows them:
+Also consider these desired later companion skills when the repo needs them and the user allows them:
 
 - `python-packaging-release` when the CLI should be installable, publishable, or packaged with stable entry points
 - `cli-ux-typer-rich` when the command tree, completion, terminal output, or interactive operator UX needs deliberate shaping
 - `config-and-secrets` when environment handling, dotenv support, secret sources, or precedence rules need explicit policy
-- `cli-testing-observability` when CLI E2E coverage, log assertions, or operator debugging ergonomics become central to the design
+- `mina-uv-pytest-unit-testing` when CLI E2E coverage, test-tier alignment, or pytest troubleshooting becomes central to the design
 - `systemd-worker-ops` when the generated worker is expected to run under `systemd` with explicit restart and logging behavior
 
-When one of those later skills is recommended, install it through `scripts/companion_skills.py` rather than asking the user or the bootstrap run to rediscover it.
+`mina-uv-pytest-unit-testing` is Mina-owned and installable through `scripts/companion_skills.py`.
+Do not present the other desired later skills as installable until their original upstream repos and pinned commands are encoded in `scripts/companion_skills.py`.

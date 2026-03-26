@@ -15,35 +15,29 @@ class CompanionSkillTests(unittest.TestCase):
     def test_python_preset_keeps_clean_architecture_as_the_only_default_startup_skill(self) -> None:
         self.assertEqual(DEFAULT_STARTUP_SKILL_NAMES, ("clean-architecture",))
 
-    def test_encoded_later_companion_skills_are_available(self) -> None:
-        self.assertEqual(
-            set(SKILLS),
-            {
-                "clean-architecture",
-                "python-packaging-release",
-                "cli-ux-typer-rich",
-                "config-and-secrets",
-                "cli-testing-observability",
-                "systemd-worker-ops",
-            },
-        )
-        self.assertIn("companion-skills/cli-ux-typer-rich", SKILLS["cli-ux-typer-rich"].source_path)
+    def test_clean_architecture_remains_the_only_pinned_skill_until_more_real_sources_are_added(self) -> None:
+        self.assertEqual(set(SKILLS), {"clean-architecture", "mina-uv-pytest-unit-testing"})
+        self.assertEqual(DEFAULT_STARTUP_SKILL_NAMES, ("clean-architecture",))
         self.assertIn(
-            "mina-ralph-loop-bootstrap-python-cli/companion-skills/cli-ux-typer-rich",
-            "\n".join(SKILLS["cli-ux-typer-rich"].pinned_commands),
+            "companion-skills/mina-uv-pytest-unit-testing",
+            SKILLS["mina-uv-pytest-unit-testing"].source_path,
+        )
+        self.assertIn(
+            "mina-ralph-loop-bootstrap-python-cli/companion-skills/mina-uv-pytest-unit-testing",
+            "\n".join(SKILLS["mina-uv-pytest-unit-testing"].pinned_commands),
         )
 
-    def test_readme_documents_later_installable_companion_skills(self) -> None:
+    def test_readme_documents_desired_python_cli_companion_skills(self) -> None:
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         for skill_name in [
             "python-packaging-release",
             "cli-ux-typer-rich",
             "config-and-secrets",
-            "cli-testing-observability",
+            "mina-uv-pytest-unit-testing",
             "systemd-worker-ops",
         ]:
             self.assertIn(skill_name, readme)
-        self.assertIn("python3 <skill>/scripts/companion_skills.py install cli-ux-typer-rich", readme)
+        self.assertIn("install mina-uv-pytest-unit-testing", readme)
 
 
 if __name__ == "__main__":
