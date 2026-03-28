@@ -90,6 +90,7 @@ If no reason is supplied, the override records the default reason `operator manu
 - Prefer deterministic gates over “try harder” loops, and use evaluator review only when the task contract still needs semantic judgment.
 - Do not mix multiple feature fronts into one task.
 - `run-once.sh` always rewrites `state/current-cycle.json`, `state/evaluation.json`, `state/backlog.md`, and `state/last-result.txt`; treat those as loop-owned state.
+- When a completed task changes shipped features, fixes operator-visible behavior, adds commands, or changes setup/runtime guidance, update `README.md` before considering the task finished.
 - if the worker goes silent and `worker.jsonl` stops changing past the stall timeout, the harness marks the cycle as `stalled`, writes a stall artifact, appends `!` to the health line, and stops the unattended loop for operator triage unless that identical stall has already repeated enough times to auto-branch into RCA
 - a single `!` does not automatically mean “create the RCA task now”; the loop records the blocker signature first and only auto-branches into the RCA/fix plan after the same blocker repeats enough times to satisfy the environment-blocker rule
 - when a repeated blocker hits the threshold, the loop auto-generates a blocker-specific RCA task, marks the original task as blocked, switches `state/current-task.txt` to the RCA task, and restores the original task when the RCA task promotes

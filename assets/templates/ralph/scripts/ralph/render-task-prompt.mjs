@@ -99,6 +99,7 @@ Rules:
 - Keep the existing package manager.
 - Preserve repository abstractions.
 - Keep changes deterministic and minimal.
+- If this task changes shipped features, fixes user-visible behavior, adds commands, or changes setup/runtime expectations, update README.md to match the current state before finishing.
 - Update this task doc's progress log with concrete notes.
 - Keep the repository in a state where the required commands can pass.
 - If the task is not done, leave the next task untouched.

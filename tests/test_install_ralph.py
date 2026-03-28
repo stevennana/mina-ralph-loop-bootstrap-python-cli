@@ -65,6 +65,24 @@ class RalphInstallModeTests(unittest.TestCase):
                 self.assertTrue(generated_path.exists(), relative_path)
                 self.assertTrue(owner_execute_enabled(generated_path), relative_path)
 
+    def test_install_ralph_includes_readme_sync_guidance_in_prompt_assets(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="install-ralph-readme-") as temp_dir:
+            repo_root = Path(temp_dir) / "repo"
+            result = subprocess.run(
+                [sys.executable, "scripts/install_ralph.py", "--repo-root", str(repo_root)],
+                cwd=REPO_ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            prompt_script = repo_root / "scripts/ralph/render-task-prompt.mjs"
+            self.assertTrue(prompt_script.exists())
+            prompt_source = prompt_script.read_text(encoding="utf-8")
+            self.assertIn("update README.md to match the current state before finishing", prompt_source)
+
 
 if __name__ == "__main__":
     unittest.main()

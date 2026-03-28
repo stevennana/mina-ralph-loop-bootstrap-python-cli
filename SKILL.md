@@ -156,6 +156,7 @@ python3 <skill>/scripts/render_docs.py --answers /tmp/ralph-bootstrap-answers.js
 Then expand the rendered docs into project-specific content.
 
 - Replace any remaining generic placeholders.
+- Treat `README.md` as the quick user/operator entry point and keep it synchronized with the current shipped features, fixes, commands, and setup expectations.
 - Add project-specific design docs and product specs beyond the baseline templates whenever the product has more than one distinct feature front.
 - If the user provides local or online references, analyze them into `docs/references/` and preserve the useful project-specific takeaways there.
 - Ensure `AGENTS.md` stays short and points into the docs tree.
@@ -171,6 +172,7 @@ For continuation runs:
 - update the existing product specs before adding new active plans
 - add or revise design docs when the new feature changes system shape or boundaries
 - update quality, reliability, and security docs if the new wave changes their posture
+- update `README.md` whenever the newly completed or planned wave changes user-facing behavior, fixes operator-visible defects, adds commands, or changes setup/runtime guidance
 - keep `docs/references/` current when new user-provided references appear
 - leave completed plan history intact
 - stop after the docs and next active queue are refreshed; do not begin app-code implementation in the same continuation run
@@ -245,6 +247,7 @@ Adapt the copied scripts so they match the generated repo:
 - evaluator and promotion logic must treat failing commands as hard gates
 - worker/runtime startup guidance must match the CLI/worker process model
 - operator logging must refer to the logged worker path, not a web-style runtime
+- task prompts and loop guidance should remind the worker to keep `README.md` aligned when a completed task changes shipped features, fixes, commands, or setup
 
 ### 6. Bootstrap boundary
 

@@ -28,6 +28,7 @@ When enhancing this skill, preserve these invariants:
 - The companion-skill installation decision and the `continue` handoff should happen in separate prompts.
 - The same skill should support later feature expansion by updating docs first and seeding the next exec-plan wave.
 - Continuation runs are planning-only by default: refresh docs and the next exec-plan wave, then stop before application-code implementation starts.
+- When completed work changes user-facing features, fixes, commands, or setup expectations, the generated repo contract should keep `README.md` synchronized with that shipped state.
 - The supported stack stays intentionally narrow unless the skill contract is explicitly expanded.
 - `SKILL.md` remains the operating contract for another Codex instance.
 - The references define stop conditions and baseline requirements; code and templates must agree with them.
