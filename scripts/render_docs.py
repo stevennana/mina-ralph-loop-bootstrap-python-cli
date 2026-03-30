@@ -294,6 +294,40 @@ def _build_spec_profile(spec: dict[str, object]) -> dict[str, object]:
     }
 
 
+def _default_execution_requirements() -> dict[str, object]:
+    return {
+        "worker_sandbox": "workspace-write",
+        "evaluator_sandbox": "read-only",
+        "network_required": False,
+        "blocker_policy": "standard_rca_after_3",
+    }
+
+
+def _merge_execution_requirements(
+    explicit: object | None,
+    *,
+    needs_network_lane: bool = False,
+) -> dict[str, object]:
+    requirements = dict(_default_execution_requirements())
+    if isinstance(explicit, dict):
+        requirements.update(
+            {
+                key: explicit[key]
+                for key in ("worker_sandbox", "evaluator_sandbox", "network_required", "blocker_policy")
+                if key in explicit
+            }
+        )
+    if needs_network_lane:
+        requirements.update(
+            {
+                "worker_sandbox": "danger-full-access",
+                "network_required": True,
+                "blocker_policy": "external_runtime_rca_after_3",
+            }
+        )
+    return requirements
+
+
 def _max_tasks_for_profile(profile: dict[str, object], slice_size: str) -> int:
     max_count = 1 + int(bool(profile["needs_foundation"])) + int(bool(profile["needs_coverage_followup"])) + int(
         profile["followup_capacity"]
@@ -488,6 +522,11 @@ def _derive_tasks_for_spec(
     for phase_index, (kind, followup_index) in enumerate(phase_plan):
         title_for_phase = _phase_title(title, kind=kind, followup_index=followup_index, single_task=single_task)
         phase_slug = slug if single_task and kind == "primary" else f"{slug}-{_phase_slug(kind, followup_index)}"
+        needs_network_lane = bool(profile["external_dependency"]) and (kind == "coverage" or single_task)
+        execution_requirements = _merge_execution_requirements(
+            spec.get("execution_requirements"),
+            needs_network_lane=needs_network_lane,
+        )
 
         if kind in {"primary", "followup"}:
             scope_bullets = behavior_chunks[behavior_chunk_index]
@@ -563,6 +602,7 @@ def _derive_tasks_for_spec(
                 "phase_slug": phase_slug,
                 "title": title_for_phase,
                 "prompt_docs": prompt_docs,
+                "execution_requirements": execution_requirements,
                 "required_commands": required_commands,
                 "required_files": required_files,
                 "human_review_triggers": human_review_triggers,
@@ -661,6 +701,7 @@ def derive_exec_tasks_from_feature_specs(
             "order": hardening_order,
             "status": "queued",
             "next_task_on_success": None,
+            "execution_requirements": _default_execution_requirements(),
             "prompt_docs": [
                 "AGENTS.md",
                 "ARCHITECTURE.md",
@@ -880,6 +921,7 @@ def render_structured_feature_artifacts(repo_root: Path, answers_json: dict[str,
             required_commands = _as_list(task.get("required_commands"))
             required_files = _as_list(task.get("required_files"))
             human_review_triggers = _as_list(task.get("human_review_triggers"))
+            execution_requirements = _merge_execution_requirements(task.get("execution_requirements"))
             scope = _as_list(task.get("scope_bullets"))
             out_of_scope = _as_list(task.get("out_of_scope_bullets"))
             exit_criteria = _as_list(task.get("exit_criteria"))
@@ -901,6 +943,7 @@ def render_structured_feature_artifacts(repo_root: Path, answers_json: dict[str,
                 "status": str(task.get("status") or "queued"),
                 "next_task_on_success": task.get("next_task_on_success"),
                 "prompt_docs": prompt_docs,
+                "execution_requirements": execution_requirements,
                 "required_commands": required_commands,
                 "required_files": required_files,
                 "human_review_triggers": human_review_triggers,

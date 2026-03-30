@@ -188,6 +188,19 @@ if (typeof value === "object") {
 ' "$file_path" "$expression"
 }
 
+read_task_execution_requirements_json() {
+  node --input-type=module - "$TASK_ID" <<'NODE'
+import { findTaskDoc, normalizeExecutionRequirements } from "./scripts/ralph/lib/task-utils.mjs";
+const taskId = process.argv[2];
+const task = findTaskDoc(taskId);
+if (!task) {
+  process.stdout.write(JSON.stringify(normalizeExecutionRequirements({})));
+  process.exit(0);
+}
+process.stdout.write(JSON.stringify(normalizeExecutionRequirements(task.meta)));
+NODE
+}
+
 record_blocker() {
   local kind="$1"
   shift
@@ -264,11 +277,26 @@ else
   append_log "- prompt: failed -> ${TASK_PROMPT_LOG}"
 fi
 
+TASK_EXECUTION_REQUIREMENTS="$(read_task_execution_requirements_json)"
+WORKER_SANDBOX_MODE="$(node -e '
+const requirements = JSON.parse(process.argv[1]);
+process.stdout.write(String(requirements.worker_sandbox ?? "workspace-write"));
+' "$TASK_EXECUTION_REQUIREMENTS")"
+EVALUATOR_SANDBOX_MODE="$(node -e '
+const requirements = JSON.parse(process.argv[1]);
+process.stdout.write(String(requirements.evaluator_sandbox ?? "read-only"));
+' "$TASK_EXECUTION_REQUIREMENTS")"
+NETWORK_REQUIRED="$(node -e '
+const requirements = JSON.parse(process.argv[1]);
+process.stdout.write(String(Boolean(requirements.network_required)));
+' "$TASK_EXECUTION_REQUIREMENTS")"
+append_log "- execution: worker_sandbox=${WORKER_SANDBOX_MODE} evaluator_sandbox=${EVALUATOR_SANDBOX_MODE} network_required=${NETWORK_REQUIRED}"
+
 WORKER_LOG="${CYCLE_DIR}/worker.jsonl"
 append_log "- worker: started"
 codex exec \
   --full-auto \
-  --sandbox workspace-write \
+  --sandbox "${WORKER_SANDBOX_MODE}" \
   --json \
   --output-last-message state/last-result.txt \
   "$(cat scripts/ralph/generated/current-task-prompt.txt)" \

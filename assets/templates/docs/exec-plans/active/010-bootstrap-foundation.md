@@ -7,6 +7,12 @@
   "order": 10,
   "status": "active",
   "next_task_on_success": "011-first-vertical-slice",
+  "execution_requirements": {
+    "worker_sandbox": "workspace-write",
+    "evaluator_sandbox": "read-only",
+    "network_required": false,
+    "blocker_policy": "standard_rca_after_3"
+  },
   "prompt_docs": [
     "AGENTS.md",
     "ARCHITECTURE.md",

@@ -245,9 +245,11 @@ Adapt the copied scripts so they match the generated repo:
 
 - required commands must match the generated Makefile and `uv` workflow
 - evaluator and promotion logic must treat failing commands as hard gates
+- task contracts should declare execution requirements when selected acceptance tasks need a non-default worker sandbox lane such as live network access
 - worker/runtime startup guidance must match the CLI/worker process model
 - operator logging must refer to the logged worker path, not a web-style runtime
 - task prompts and loop guidance should remind the worker to keep `README.md` aligned when a completed task changes shipped features, fixes, commands, or setup
+- when a continuation run upgrades the Ralph contract materially, refresh the installed Ralph assets with `scripts/install_ralph.py --overwrite`
 
 ### 6. Bootstrap boundary
 

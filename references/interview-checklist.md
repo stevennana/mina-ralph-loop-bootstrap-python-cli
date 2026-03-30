@@ -47,6 +47,7 @@ Use this when defining a fresh v1 or when the current repo is too underspecified
 - required read-only or admin surfaces
 - what absolutely must be test-covered end-to-end
 - which external-resource flows must be test-covered end-to-end before promotion
+- which of those flows need a live network-capable Ralph worker lane instead of the default sandbox
 
 ### Technical Basis
 
@@ -118,6 +119,7 @@ Do not re-ask the bootstrap questions unless the existing product definition is 
 - which external-resource flows need end-to-end proof before promotion
 - which deterministic commands must pass before the new tasks can promote
 - whether `make verify` or other gates need to expand for this wave
+- whether any task in the next wave needs explicit `execution_requirements` such as a live network lane
 
 ### Queue Delta
 

@@ -137,6 +137,44 @@ class RenderDocsDerivationTests(unittest.TestCase):
 
         validate_exec_tasks(feature_specs, exec_tasks)
 
+    def test_external_acceptance_task_gets_network_execution_requirements(self) -> None:
+        feature_specs = [make_feature_spec("Real LLM Reporting", with_external_dependency=True)]
+
+        exec_tasks = derive_exec_tasks_from_feature_specs(
+            feature_specs,
+            "demo-app",
+            runtime_startup_required=False,
+            slice_size="balanced",
+            preferred_total_tasks=3,
+        )
+
+        coverage_task = next(task for task in exec_tasks if "Acceptance And Edge Coverage" in str(task["title"]))
+        requirements = coverage_task["execution_requirements"]
+        self.assertEqual(requirements["worker_sandbox"], "danger-full-access")
+        self.assertEqual(requirements["evaluator_sandbox"], "read-only")
+        self.assertTrue(requirements["network_required"])
+        self.assertEqual(requirements["blocker_policy"], "external_runtime_rca_after_3")
+
+    def test_default_tasks_keep_default_execution_requirements(self) -> None:
+        feature_specs = [make_feature_spec("Note Editing", with_external_dependency=False)]
+
+        exec_tasks = derive_exec_tasks_from_feature_specs(
+            feature_specs,
+            "demo-app",
+            runtime_startup_required=False,
+            slice_size="balanced",
+            preferred_total_tasks=2,
+        )
+
+        primary_task = exec_tasks[0]
+        hardening_task = exec_tasks[-1]
+        for task in (primary_task, hardening_task):
+            requirements = task["execution_requirements"]
+            self.assertEqual(requirements["worker_sandbox"], "workspace-write")
+            self.assertEqual(requirements["evaluator_sandbox"], "read-only")
+            self.assertFalse(requirements["network_required"])
+            self.assertEqual(requirements["blocker_policy"], "standard_rca_after_3")
+
 
 if __name__ == "__main__":
     unittest.main()

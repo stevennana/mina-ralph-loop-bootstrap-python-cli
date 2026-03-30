@@ -75,6 +75,15 @@ function appendArtifactHistory(existingPaths, nextPaths) {
   return unique([...(existingPaths ?? []), ...(nextPaths ?? [])]).slice(-MAX_ARTIFACT_HISTORY);
 }
 
+function summarizeLaunchShape(externalBlocker, evaluation) {
+  const workerSandbox = String(evaluation?.execution_requirements?.worker_sandbox ?? "workspace-write");
+  const sourceCommand = String(externalBlocker?.source_command ?? "unknown-command");
+  return {
+    worker_sandbox: workerSandbox,
+    source_command: sourceCommand,
+  };
+}
+
 function summarizeFailedCommands(failedCommands) {
   const slugs = unique(failedCommands.map((command) => slugify(command.command)));
   return slugs.length > 0 ? slugs : ["no-command"];
@@ -177,6 +186,45 @@ export function getLatestBlockerEntry(taskId) {
 export function deriveEvaluationBlocker(taskId, evaluation) {
   if (!evaluation || evaluation.promotion_eligible) {
     return null;
+  }
+
+  if (
+    evaluation.status === "blocked" &&
+    evaluation.external_blocker &&
+    typeof evaluation.external_blocker === "object"
+  ) {
+    const externalBlocker = evaluation.external_blocker;
+    const blockerKind = String(externalBlocker.kind ?? "external_runtime_blocker");
+    const endpoint = String(externalBlocker.endpoint ?? "unknown-endpoint");
+    const reason = String(externalBlocker.reason ?? "blocked by current runtime");
+    const launchShape = summarizeLaunchShape(externalBlocker, evaluation);
+    const signature = [
+      "external_runtime_blocker",
+      slugify(blockerKind),
+      slugify(endpoint),
+      slugify(launchShape.worker_sandbox),
+      slugify(launchShape.source_command),
+    ].join("|");
+
+    return {
+      task_id: normalizeTaskId(taskId),
+      kind: "external_runtime_blocker",
+      signature,
+      summary:
+        `Repeated external runtime blocker: ${blockerKind} for ${endpoint} from ${launchShape.source_command} ` +
+        `using ${launchShape.worker_sandbox}`,
+      branch_slug: `external-runtime-${slugify(endpoint)}-${createShortHash(signature)}`.slice(0, 48),
+      failed_commands: launchShape.source_command === "unknown-command" ? [] : [launchShape.source_command],
+      failing_spec_paths: [],
+      missing_files: [],
+      evidence_artifact_paths: appendArtifactHistory([], []),
+      external_context: {
+        endpoint,
+        reason,
+        worker_sandbox: launchShape.worker_sandbox,
+        source_command: launchShape.source_command,
+      },
+    };
   }
 
   const failedCommands = (evaluation?.deterministic?.commands ?? [])
@@ -307,6 +355,9 @@ export function recordBlockerOccurrence(taskId, blocker) {
   existingEntry.last_seen_at = now;
   if (blocker.stall_context) {
     existingEntry.stall_context = blocker.stall_context;
+  }
+  if (blocker.external_context) {
+    existingEntry.external_context = blocker.external_context;
   }
 
   taskEntry.signatures[signatureKey] = existingEntry;

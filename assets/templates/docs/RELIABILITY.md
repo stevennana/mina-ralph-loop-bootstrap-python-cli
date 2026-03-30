@@ -25,3 +25,5 @@ Document any reliability gaps, operational caveats, or deferred safeguards direc
 
 ## Environment-Specific Verification Blockers
 If the direct operator path passes but the current sandboxed or wrapped runner still fails, record that separately from normal product bugs and escalate it explicitly instead of hiding it inside generic “not done” wording.
+If a task requires live network access, declare that in `taskmeta.execution_requirements` so Ralph can run it in the correct worker lane instead of silently retrying inside the default sandbox.
+When the same external-runtime blocker repeats three times for the same task, let Ralph auto-branch it into a dedicated RCA/fix task with the original task left blocked until the RCA path resolves.

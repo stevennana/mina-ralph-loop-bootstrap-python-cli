@@ -50,6 +50,7 @@ When a similar environment-specific blocker occurs three times for the same acti
 Generated Ralph loops should persist blocker signatures in loop-owned state rather than relying on prompt prose alone.
 For deterministic failures, the signature should be derived from the failing required command plus normalized failing test/spec paths when available.
 For worker stalls, the signature should be derived from the stable stall classification and last worker event shape rather than timestamps.
+For external-runtime blockers, the signature should include the blocker kind, endpoint or host when known, the required command that exposed it, and the declared worker sandbox lane.
 
 ## RCA / Fix Plan Requirements
 
@@ -58,6 +59,7 @@ The blocker-specific plan should:
 - describe the repeated failure precisely
 - separate repo bugs from environment constraints
 - name the exact failing command and launch shape
+- confirm whether the task's declared execution lane was correct before broadening into product work
 - define the smallest fix or validation needed
 - define what evidence is required before returning to the original task
 

@@ -10,6 +10,7 @@ The first version of the loop could repeatedly work on one prompt, but it could 
 - deterministic checks
 - a read-only evaluator pass with structured JSON output
 - automatic promotion to the next task when the current task is truly complete
+- task-level execution requirements that can switch selected tasks onto a non-default worker sandbox lane
 - repeated-blocker tracking that auto-branches the third identical environment-specific blocker into an RCA task
 - an explicit manual promotion path for exceptional stalled-but-done cases
 
@@ -41,6 +42,7 @@ The first version of the loop could repeatedly work on one prompt, but it could 
 - generated repos should document a process log level environment variable such as `LOG_LEVEL`
 - inspect artifact files when the compact log points to a failed phase
 - `state/run-log.md` also appends a compact health line after each cycle: `o` for promoted success, `x` for completed non-promotion/failure or RCA auto-branch, and `!` for a stalled worker cycle
+- `state/run-log.md` also records the chosen worker/evaluator sandbox for each task cycle
 
 ## Recommended usage
 
@@ -94,6 +96,8 @@ If no reason is supplied, the override records the default reason `operator manu
 - if the worker goes silent and `worker.jsonl` stops changing past the stall timeout, the harness marks the cycle as `stalled`, writes a stall artifact, appends `!` to the health line, and stops the unattended loop for operator triage unless that identical stall has already repeated enough times to auto-branch into RCA
 - a single `!` does not automatically mean “create the RCA task now”; the loop records the blocker signature first and only auto-branches into the RCA/fix plan after the same blocker repeats enough times to satisfy the environment-blocker rule
 - when a repeated blocker hits the threshold, the loop auto-generates a blocker-specific RCA task, marks the original task as blocked, switches `state/current-task.txt` to the RCA task, and restores the original task when the RCA task promotes
+- if a task declares live network access in `taskmeta.execution_requirements`, `run-once.sh` switches the worker to the declared sandbox lane instead of always using `workspace-write`
+- if evaluation ends in `blocked`, `run-loop.sh` stops for operator triage instead of blindly retrying the same runtime constraint forever
 - Required commands come from each task doc’s `taskmeta.required_commands`; `evaluate-task.mjs` runs exactly those commands plus required-file checks.
 - `manual-promote.sh` is an explicit operator override; use it only for exceptional stalled-but-done cases. If you omit `--reason`, it records `operator manual promotion`.
 - If the evaluator repeatedly returns `not_done`, tighten the active task doc instead of making the prompt larger.

@@ -20,6 +20,17 @@ while true; do
     echo "run-once failed with exit code ${EXIT_CODE}. Stopping loop." | tee -a state/run-log.md
     exit "$EXIT_CODE"
   fi
+  if [[ -f state/evaluation.json ]]; then
+    EVALUATION_STATUS="$(node -e '
+const fs = require("fs");
+const data = JSON.parse(fs.readFileSync("state/evaluation.json", "utf8"));
+process.stdout.write(String(data.status ?? ""));
+')"
+    if [[ "${EVALUATION_STATUS}" == "blocked" ]]; then
+      echo "Task blocked by an external dependency or runtime constraint. Stopping loop for operator triage." | tee -a state/run-log.md
+      break
+    fi
+  fi
   TASK_ID="$(tr -d '\n' < state/current-task.txt || true)"
   if [[ -z "${TASK_ID}" || "${TASK_ID}" == "NONE" ]]; then
     echo "No remaining task. Stopping loop." | tee -a state/run-log.md

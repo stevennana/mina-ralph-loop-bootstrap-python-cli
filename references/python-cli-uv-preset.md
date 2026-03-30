@@ -83,6 +83,7 @@ Keep these defaults aligned unless there is a strong reason not to:
 - Do not leave the repo in a state where the docs prescribe one command contract and the scaffold exposes another.
 - Do not leave the repo in a state where the evaluator can promote tasks despite failing required commands.
 - Ensure external-resource features are represented in CLI E2E coverage before the related task is promotable.
+- When a task needs live external endpoint access to prove that E2E coverage, declare the task's `execution_requirements` so Ralph can select the correct worker sandbox lane.
 - If the app depends on DB or runtime preparation, do not leave the worker path unproven.
 - Do not leave operators blind during manual verification; wire `make worker-logged`, `logs/`, and log-level configuration into the generated repo contract.
 

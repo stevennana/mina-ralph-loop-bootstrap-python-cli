@@ -10,6 +10,7 @@ import {
   ensureDir,
   fileExists,
   findTaskDoc,
+  normalizeExecutionRequirements,
   normalizeTaskId,
   readCurrentTaskId,
   readText,
@@ -44,6 +45,11 @@ function buildRcaTaskMarkdown(task, blocker, rcaTaskId) {
   const createdAt = timestamp();
   const relativeTaskPath = path.relative(process.cwd(), task.filePath);
   const title = buildRcaTitle(task);
+  const executionRequirements = normalizeExecutionRequirements(task.meta);
+  if (blocker.kind === "external_runtime_blocker" && blocker.external_context?.worker_sandbox) {
+    executionRequirements.worker_sandbox = blocker.external_context.worker_sandbox;
+    executionRequirements.network_required = true;
+  }
   const order =
     typeof task.meta.order === "number" ? Number(task.meta.order) + 0.01 : Number.MAX_SAFE_INTEGER;
   const requiredCommands =
@@ -57,7 +63,9 @@ function buildRcaTaskMarkdown(task, blocker, rcaTaskId) {
   );
   const scopeLines = [
     "- isolate the repeated blocker signature without broadening back into the parent feature",
-    blocker.failed_commands?.length
+    blocker.kind === "external_runtime_blocker"
+      ? `- verify whether the declared execution lane (${executionRequirements.worker_sandbox}) and endpoint access are configured correctly`
+      : blocker.failed_commands?.length
       ? `- restore the failing required command path: ${blocker.failed_commands.join(", ")}`
       : "- determine why the worker stalls before the parent task can complete its checks",
     "- update the parent task log and blocker evidence so the return path is explicit",
@@ -92,6 +100,7 @@ function buildRcaTaskMarkdown(task, blocker, rcaTaskId) {
     status: "active",
     promotion_mode: "standard",
     next_task_on_success: task.id,
+    execution_requirements: executionRequirements,
     prompt_docs: promptDocs,
     required_commands: requiredCommands,
     required_files: [],

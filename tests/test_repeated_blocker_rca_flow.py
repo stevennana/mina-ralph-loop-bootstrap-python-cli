@@ -121,6 +121,45 @@ class RepeatedBlockerRcaFlowTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+    def write_external_runtime_blocked_evaluation(self) -> None:
+        payload = {
+            "checked_at": "2026-03-31T00:00:00Z",
+            "task_id": self.parent_task_id,
+            "status": "blocked",
+            "promotion_eligible": False,
+            "execution_requirements": {
+                "worker_sandbox": "danger-full-access",
+                "evaluator_sandbox": "read-only",
+                "network_required": True,
+                "blocker_policy": "external_runtime_rca_after_3",
+            },
+            "deterministic": {
+                "checked_at": "2026-03-31T00:00:00Z",
+                "task_id": self.parent_task_id,
+                "pass": False,
+                "commands": [
+                    {
+                        "command": "make verify",
+                        "ok": False,
+                        "output": "",
+                        "error": "REAL_LLM_E2E_BLOCKED configured endpoint llm.mina.asia:443 is unreachable from this shell runtime: gaierror",
+                    }
+                ],
+                "missing_files": [],
+            },
+            "external_blocker": {
+                "kind": "real_llm_endpoint_unreachable",
+                "endpoint": "llm.mina.asia:443",
+                "reason": "gaierror",
+                "source_command": "make verify",
+            },
+            "summary": "Task is blocked outside the repo by external runtime reachability.",
+        }
+        (self.repo_root / "state" / "evaluation.json").write_text(
+            json.dumps(payload, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
     def run_node(self, script_relative_path: str, *args: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             ["node", script_relative_path, *args],
@@ -205,6 +244,26 @@ class RepeatedBlockerRcaFlowTests(unittest.TestCase):
 
         tracker_after_promotion = self.read_json("state/blocker-tracker.json")
         self.assertEqual(tracker_after_promotion["tasks"], {})
+
+    def test_external_runtime_blocker_uses_endpoint_signature_and_keeps_execution_lane(self) -> None:
+        self.write_external_runtime_blocked_evaluation()
+
+        for expected_count in (1, 2, 3):
+            completed = self.run_node("scripts/ralph/record-blocker.mjs", "--kind", "evaluation")
+            payload = json.loads(completed.stdout)
+            self.assertEqual(payload["repeat_count"], expected_count)
+            self.assertEqual(payload["signature"].split("|")[0], "external_runtime_blocker")
+
+        branch = self.run_node("scripts/ralph/branch-rca-task.mjs")
+        branch_payload = json.loads(branch.stdout)
+        self.assertTrue(branch_payload["branched"])
+
+        rca_task_id = branch_payload["rca_task_id"]
+        rca_task_path = self.repo_root / "docs" / "exec-plans" / "active" / f"{rca_task_id}.md"
+        rca_markdown = rca_task_path.read_text(encoding="utf-8")
+        self.assertIn('"worker_sandbox": "danger-full-access"', rca_markdown)
+        self.assertIn('"network_required": true', rca_markdown)
+        self.assertIn("llm.mina.asia:443", rca_markdown)
 
 
 if __name__ == "__main__":

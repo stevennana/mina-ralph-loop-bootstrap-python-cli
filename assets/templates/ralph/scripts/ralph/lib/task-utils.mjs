@@ -6,6 +6,12 @@ export const ACTIVE_TASK_DIR = path.join(REPO_ROOT, "docs", "exec-plans", "activ
 export const COMPLETED_TASK_DIR = path.join(REPO_ROOT, "docs", "exec-plans", "completed");
 export const STATE_DIR = path.join(REPO_ROOT, "state");
 export const GENERATED_DIR = path.join(REPO_ROOT, "scripts", "ralph", "generated");
+export const DEFAULT_EXECUTION_REQUIREMENTS = {
+  worker_sandbox: "workspace-write",
+  evaluator_sandbox: "read-only",
+  network_required: false,
+  blocker_policy: "standard_rca_after_3",
+};
 
 export function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
@@ -37,6 +43,30 @@ export function readCurrentTaskId() {
   if (!fileExists(filePath)) return null;
   const value = normalizeTaskId(readText(filePath));
   return value.length > 0 ? value : null;
+}
+
+export function normalizeExecutionRequirements(taskMeta = {}) {
+  const provided =
+    taskMeta && typeof taskMeta === "object" && taskMeta.execution_requirements && typeof taskMeta.execution_requirements === "object"
+      ? taskMeta.execution_requirements
+      : {};
+
+  const workerSandbox = ["workspace-write", "danger-full-access"].includes(provided.worker_sandbox)
+    ? provided.worker_sandbox
+    : DEFAULT_EXECUTION_REQUIREMENTS.worker_sandbox;
+  const evaluatorSandbox = ["read-only", "workspace-write", "danger-full-access"].includes(provided.evaluator_sandbox)
+    ? provided.evaluator_sandbox
+    : DEFAULT_EXECUTION_REQUIREMENTS.evaluator_sandbox;
+  const blockerPolicy = ["standard_rca_after_3", "external_runtime_rca_after_3"].includes(provided.blocker_policy)
+    ? provided.blocker_policy
+    : DEFAULT_EXECUTION_REQUIREMENTS.blocker_policy;
+
+  return {
+    worker_sandbox: workerSandbox,
+    evaluator_sandbox: evaluatorSandbox,
+    network_required: Boolean(provided.network_required),
+    blocker_policy: blockerPolicy,
+  };
 }
 
 export function writeCurrentTaskId(taskId) {

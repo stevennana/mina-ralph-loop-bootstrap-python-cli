@@ -34,12 +34,14 @@ A plan is not a vague idea. It is an executable work packet with:
 - record debt instead of letting it stay implicit
 
 ## Promotion Rules
+- Each task's `taskmeta.execution_requirements` declares the worker/evaluator sandbox lane that Ralph should use for that task.
 - Required commands in a task's `taskmeta` are hard gates.
 - Failing tests block promotion even if the feature appears complete by inspection.
 - Evaluator judgment exists to catch false positives after checks pass, not to excuse red checks.
 - If the tests do not prove the intended behavior, tighten the task contract and checks before promoting.
 - Fast local checks are for iteration speed; the required commands remain the promotion contract.
 - If a feature depends on an outside resource, include CLI E2E coverage for that feature before promotion.
+- If a task needs live external network access to prove its acceptance path, declare that in `taskmeta.execution_requirements` instead of assuming the default sandbox lane can reach the endpoint.
 - If a plan page is still rough or broad, improve the supporting docs and split the plan before promotion work starts.
 - If the same environment-specific blocker repeats three times, let the Ralph harness auto-branch into a dedicated RCA/fix exec-plan and then return to the original task through normal promotion.
 
