@@ -105,10 +105,11 @@ Rules:
 - If the task is not done, leave the next task untouched.
 ${rcaRules.join("\n")}
 
-At the end of the run, write a concise operator handoff summary into state/last-result.txt via your final response:
+At the end of the run, write a concise implementation handoff into state/worker-handoff.txt via your final response:
 - what changed
-- whether the exit criteria appear satisfied
+- what you observed about the exit criteria before evaluator reruns the required commands
 - what remains if the task is still incomplete
+- do not treat this worker handoff as the authoritative promotion decision; the evaluator rerun is authoritative
 `.trim();
 
 const outputPath = path.join(GENERATED_DIR, "current-task-prompt.txt");

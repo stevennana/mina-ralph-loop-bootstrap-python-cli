@@ -157,6 +157,28 @@ const payload = {
   summary: `Worker stalled before evaluator at ${detectedAt}. Inspect ${workerLog} and ${artifactPath}.`,
 };
 fs.writeFileSync("state/evaluation.json", `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+fs.writeFileSync(
+  "state/current-cycle-summary.json",
+  `${JSON.stringify(
+    {
+      generated_at: new Date().toISOString(),
+      task_id: taskId,
+      authoritative_source: "stall-detector",
+      status: "not_done",
+      promotion_eligible: false,
+      deterministic_pass: false,
+      summary: `Worker stalled before evaluator at ${detectedAt}. Inspect ${workerLog} and ${artifactPath}.`,
+      missing_requirements: [
+        `Worker stalled before evaluator at ${detectedAt}.`,
+      ],
+      satisfied_exit_criteria: [],
+      worker_handoff_summary: "",
+    },
+    null,
+    2,
+  )}\n`,
+  "utf8",
+);
 NODE
 }
 
@@ -294,11 +316,12 @@ append_log "- execution: worker_sandbox=${WORKER_SANDBOX_MODE} evaluator_sandbox
 
 WORKER_LOG="${CYCLE_DIR}/worker.jsonl"
 append_log "- worker: started"
+: > state/worker-handoff.txt
 codex exec \
   --full-auto \
   --sandbox "${WORKER_SANDBOX_MODE}" \
   --json \
-  --output-last-message state/last-result.txt \
+  --output-last-message state/worker-handoff.txt \
   "$(cat scripts/ralph/generated/current-task-prompt.txt)" \
   >"$WORKER_LOG" 2>&1 &
 WORKER_PID=$!
@@ -365,8 +388,8 @@ else
   append_log "- worker: failed -> ${WORKER_LOG}"
 fi
 
-if [[ -s state/last-result.txt ]]; then
-  append_log "- worker-summary: $(head -n 1 state/last-result.txt)"
+if [[ -s state/worker-handoff.txt ]]; then
+  append_log "- worker-summary: $(head -n 1 state/worker-handoff.txt)"
 fi
 
 EVALUATOR_LOG="${CYCLE_DIR}/evaluator.log"
@@ -377,6 +400,9 @@ if node scripts/ralph/evaluate-task.mjs >"$EVALUATOR_LOG" 2>&1; then
 fi
 
 if [[ -f state/evaluation.json ]]; then
+  if node scripts/ralph/write-cycle-summary.mjs >/dev/null 2>&1; then
+    :
+  fi
   EVALUATION_SUMMARY="$(node -e '
 const fs = require("fs");
 const data = JSON.parse(fs.readFileSync("state/evaluation.json", "utf8"));
@@ -385,6 +411,9 @@ const head = `status=${data.status ?? "unknown"} promotion=${String(data.promoti
 process.stdout.write(summary ? `${head} ${summary}` : head);
 ')"
   append_log "- evaluator: ${EVALUATION_SUMMARY} -> ${EVALUATOR_LOG}"
+  if [[ -s state/last-result.txt ]]; then
+    append_log "- cycle-summary: $(head -n 1 state/last-result.txt)"
+  fi
   NEXT_SERVER_LOG_PATH="$(node -e '
 const fs = require("fs");
 const data = JSON.parse(fs.readFileSync("state/evaluation.json", "utf8"));

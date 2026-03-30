@@ -27,6 +27,8 @@ The first version of the loop could repeatedly work on one prompt, but it could 
 - `scripts/ralph/manual-promote.sh`: manually promote the current task with a recorded reason and optional artifact reference
 - `state/current-task.txt`: current task id
 - `state/current-cycle.json`: live cycle phase/status for the current run
+- `state/worker-handoff.txt`: raw worker handoff from the current cycle
+- `state/current-cycle-summary.json`: authoritative current-cycle summary derived after evaluator completes
 - `state/evaluation.json`: latest decision
 - `state/blocker-tracker.json`: repeat-blocker signature history and RCA branching state
 - `state/backlog.md`: rendered queue snapshot
@@ -36,6 +38,7 @@ The first version of the loop could repeatedly work on one prompt, but it could 
 
 - `state/run-log.md` is the compact operator log
 - `state/current-cycle.json` shows whether the current run is still active and which phase it is in
+- `state/current-cycle-summary.json` is the authoritative per-cycle summary; prefer it over raw worker prose when they disagree
 - `state/blocker-tracker.json` tracks repeated blocker signatures per task
 - full raw output for each cycle is written under `state/artifacts/`
 - manual operator runs should use `make worker-logged`, which writes a timestamped worker log under `logs/`
@@ -66,6 +69,8 @@ Default sleep is `30` seconds when `RALPH_LOOP_SLEEP_SECONDS` is not set.
 ```bash
 tail -f state/run-log.md
 cat state/last-result.txt
+cat state/worker-handoff.txt
+cat state/current-cycle-summary.json
 cat state/evaluation.json
 cat state/current-cycle.json
 ls logs/
@@ -91,13 +96,14 @@ If no reason is supplied, the override records the default reason `operator manu
 - Keep tasks small and vertically sliced.
 - Prefer deterministic gates over “try harder” loops, and use evaluator review only when the task contract still needs semantic judgment.
 - Do not mix multiple feature fronts into one task.
-- `run-once.sh` always rewrites `state/current-cycle.json`, `state/evaluation.json`, `state/backlog.md`, and `state/last-result.txt`; treat those as loop-owned state.
+- `run-once.sh` always rewrites `state/current-cycle.json`, `state/evaluation.json`, `state/backlog.md`, `state/worker-handoff.txt`, `state/current-cycle-summary.json`, and `state/last-result.txt`; treat those as loop-owned state.
 - When a completed task changes shipped features, fixes operator-visible behavior, adds commands, or changes setup/runtime guidance, update `README.md` before considering the task finished.
 - if the worker goes silent and `worker.jsonl` stops changing past the stall timeout, the harness marks the cycle as `stalled`, writes a stall artifact, appends `!` to the health line, and stops the unattended loop for operator triage unless that identical stall has already repeated enough times to auto-branch into RCA
 - a single `!` does not automatically mean “create the RCA task now”; the loop records the blocker signature first and only auto-branches into the RCA/fix plan after the same blocker repeats enough times to satisfy the environment-blocker rule
 - when a repeated blocker hits the threshold, the loop auto-generates a blocker-specific RCA task, marks the original task as blocked, switches `state/current-task.txt` to the RCA task, and restores the original task when the RCA task promotes
 - if a task declares live network access in `taskmeta.execution_requirements`, `run-once.sh` switches the worker to the declared sandbox lane instead of always using `workspace-write`
 - if evaluation ends in `blocked`, `run-loop.sh` stops for operator triage instead of blindly retrying the same runtime constraint forever
+- `state/worker-handoff.txt` is only the worker's contextual handoff; `state/current-cycle-summary.json` and the rewritten `state/last-result.txt` are the authoritative evaluator-backed outcome for that cycle
 - Required commands come from each task doc’s `taskmeta.required_commands`; `evaluate-task.mjs` runs exactly those commands plus required-file checks.
 - `manual-promote.sh` is an explicit operator override; use it only for exceptional stalled-but-done cases. If you omit `--reason`, it records `operator manual promotion`.
 - If the evaluator repeatedly returns `not_done`, tighten the active task doc instead of making the prompt larger.

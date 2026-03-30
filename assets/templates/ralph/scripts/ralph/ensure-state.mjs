@@ -27,7 +27,9 @@ if (!currentTaskId) {
 const defaults = [
   ["run-log.md", "# Ralph Loop Run Log\n"],
   ["task-history.md", "# Task History\n\n"],
+  ["worker-handoff.txt", ""],
   ["last-result.txt", ""],
+  ["current-cycle-summary.json", '{\n  "status": "not_run"\n}\n'],
   ["evaluation.json", '{\n  "status": "not_run"\n}\n'],
   ["blocker-tracker.json", '{\n  "version": 1,\n  "updated_at": "",\n  "tasks": {}\n}\n'],
   ["current-cycle.json", '{\n  "status": "idle"\n}\n'],

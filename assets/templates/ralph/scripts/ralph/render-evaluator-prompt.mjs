@@ -21,8 +21,8 @@ if (!task) {
 
 const deterministicPath = path.join(process.cwd(), "state", "deterministic-checks.json");
 const deterministic = fileExists(deterministicPath) ? readText(deterministicPath) : "{}";
-const lastResultPath = path.join(process.cwd(), "state", "last-result.txt");
-const lastResult = fileExists(lastResultPath) ? readText(lastResultPath) : "";
+const workerHandoffPath = path.join(process.cwd(), "state", "worker-handoff.txt");
+const workerHandoff = fileExists(workerHandoffPath) ? readText(workerHandoffPath) : "";
 
 const objective = extractSection(task.markdown, "Objective");
 const scope = extractSection(task.markdown, "Scope");
@@ -60,8 +60,15 @@ ${evaluatorNotes}
 Deterministic check summary:
 ${deterministic}
 
-Worker handoff summary from the last run:
-${lastResult || "(empty)"}
+Worker handoff summary from this cycle:
+${workerHandoff || "(empty)"}
+
+Authoritative precedence for this cycle:
+- treat the current-cycle deterministic check summary as the primary machine-readable truth
+- treat concrete runtime artifacts you can verify in the repository or temp logs as stronger evidence than historical prose
+- treat the worker handoff as context only, not as the authoritative promotion decision
+- treat older progress-log or acceptance-note prose as lowest precedence when it conflicts with current-cycle passing evidence
+- do not let stale blocked narrative override current-cycle passing checks or concrete success artifacts unless the blocker is still reproducible now
 
 Your job:
 - inspect the repository and current implementation
