@@ -303,6 +303,53 @@ def _default_execution_requirements() -> dict[str, object]:
     }
 
 
+def _default_promotion_evidence(task_id: str, producer_command: str) -> list[dict[str, object]]:
+    return [
+        {
+            "id": f"{task_id}-live-proof",
+            "kind": "command_artifact",
+            "producer_command": producer_command,
+            "manifest_path": f"state/artifacts/live-proofs/{task_id}/latest/manifest.json",
+            "freshness": "current_cycle",
+        }
+    ]
+
+
+def _merge_promotion_evidence(
+    explicit: object | None,
+    *,
+    task_id: str,
+    required_commands: list[str],
+    needs_live_proof: bool = False,
+) -> list[dict[str, object]]:
+    evidence: list[dict[str, object]] = []
+    if isinstance(explicit, list):
+        for index, item in enumerate(explicit, start=1):
+            if not isinstance(item, dict):
+                continue
+            producer_command = str(item.get("producer_command") or "").strip()
+            manifest_path = str(item.get("manifest_path") or "").strip()
+            if not producer_command or not manifest_path:
+                continue
+            entry: dict[str, object] = {
+                "id": str(item.get("id") or f"evidence-{index}"),
+                "kind": str(item.get("kind") or "command_artifact"),
+                "producer_command": producer_command,
+                "manifest_path": manifest_path,
+                "freshness": str(item.get("freshness") or "current_cycle"),
+            }
+            if str(item.get("log_path") or "").strip():
+                entry["log_path"] = str(item["log_path"]).strip()
+            if str(item.get("required_event") or "").strip():
+                entry["required_event"] = str(item["required_event"]).strip()
+            evidence.append(entry)
+
+    if evidence or not needs_live_proof or not required_commands:
+        return evidence
+
+    return _default_promotion_evidence(task_id, required_commands[0])
+
+
 def _merge_execution_requirements(
     explicit: object | None,
     *,
@@ -527,6 +574,12 @@ def _derive_tasks_for_spec(
             spec.get("execution_requirements"),
             needs_network_lane=needs_network_lane,
         )
+        promotion_evidence = _merge_promotion_evidence(
+            spec.get("promotion_evidence"),
+            task_id=phase_slug,
+            required_commands=required_commands,
+            needs_live_proof=needs_network_lane,
+        )
 
         if kind in {"primary", "followup"}:
             scope_bullets = behavior_chunks[behavior_chunk_index]
@@ -603,6 +656,7 @@ def _derive_tasks_for_spec(
                 "title": title_for_phase,
                 "prompt_docs": prompt_docs,
                 "execution_requirements": execution_requirements,
+                "promotion_evidence": promotion_evidence,
                 "required_commands": required_commands,
                 "required_files": required_files,
                 "human_review_triggers": human_review_triggers,
@@ -702,6 +756,7 @@ def derive_exec_tasks_from_feature_specs(
             "status": "queued",
             "next_task_on_success": None,
             "execution_requirements": _default_execution_requirements(),
+            "promotion_evidence": [],
             "prompt_docs": [
                 "AGENTS.md",
                 "ARCHITECTURE.md",
@@ -922,6 +977,11 @@ def render_structured_feature_artifacts(repo_root: Path, answers_json: dict[str,
             required_files = _as_list(task.get("required_files"))
             human_review_triggers = _as_list(task.get("human_review_triggers"))
             execution_requirements = _merge_execution_requirements(task.get("execution_requirements"))
+            promotion_evidence = _merge_promotion_evidence(
+                task.get("promotion_evidence"),
+                task_id=task_id,
+                required_commands=required_commands,
+            )
             scope = _as_list(task.get("scope_bullets"))
             out_of_scope = _as_list(task.get("out_of_scope_bullets"))
             exit_criteria = _as_list(task.get("exit_criteria"))
@@ -944,6 +1004,7 @@ def render_structured_feature_artifacts(repo_root: Path, answers_json: dict[str,
                 "next_task_on_success": task.get("next_task_on_success"),
                 "prompt_docs": prompt_docs,
                 "execution_requirements": execution_requirements,
+                "promotion_evidence": promotion_evidence,
                 "required_commands": required_commands,
                 "required_files": required_files,
                 "human_review_triggers": human_review_triggers,

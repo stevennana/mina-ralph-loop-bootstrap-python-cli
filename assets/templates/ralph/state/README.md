@@ -10,3 +10,4 @@ These files are mutable runtime artifacts for the Ralph loop.
 - `run-log.md`: append-only operational log
 - `backlog.md`: rendered queue snapshot
 - `current-cycle.json`: current phase/status, including `stalled` when the worker heartbeat goes silent
+- `artifacts/live-proofs/`: preserved promotion-grade manifests and copied logs for live acceptance tasks

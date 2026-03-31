@@ -3,6 +3,7 @@ import { execSync, spawnSync } from "node:child_process";
 import {
   GENERATED_DIR,
   STATE_DIR,
+  evaluatePromotionEvidence,
   ensureDir,
   findTaskDoc,
   readCurrentTaskId,
@@ -84,6 +85,7 @@ function runShellCommand(command) {
 
 ensureDir(STATE_DIR);
 ensureDir(GENERATED_DIR);
+const evaluationStartedAt = timestamp();
 
 const taskId = readCurrentTaskId();
 if (!taskId || taskId === "NONE") {
@@ -129,6 +131,12 @@ const deterministic = {
 writeText(path.join(STATE_DIR, "deterministic-checks.json"), JSON.stringify(deterministic, null, 2));
 
 const externalBlocker = deriveExternalRuntimeBlocker(commandResults);
+const promotionEvidence = evaluatePromotionEvidence(task.meta, {
+  currentCycleStartedAt: evaluationStartedAt,
+});
+const promotionEvidenceIssues = promotionEvidence.flatMap((item) => item.issues ?? []);
+const promotionEvidenceRequired = promotionEvidence.length > 0;
+const promotionEvidencePass = promotionEvidence.every((item) => item.valid === true);
 
 if (
   externalBlocker &&
@@ -143,6 +151,7 @@ if (
     llm: null,
     execution_requirements: executionRequirements,
     external_blocker: externalBlocker,
+    promotion_evidence: promotionEvidence,
     summary:
       `Task is blocked outside the repo by external runtime reachability. ` +
       `The configured endpoint ${externalBlocker.endpoint} could not be reached from ` +
@@ -167,11 +176,31 @@ if (!deterministic.pass) {
     llm: null,
     execution_requirements: executionRequirements,
     external_blocker: externalBlocker,
+    promotion_evidence: promotionEvidence,
     summary: "Deterministic checks failed; task is not ready for promotion.",
     missing_requirements: [
       ...missingFiles.map((file) => `Missing required file: ${file}`),
       ...commandResults.filter((r) => !r.ok).map((r) => `Failed required command: ${r.command}`),
     ],
+  };
+  writeText(path.join(STATE_DIR, "evaluation.json"), JSON.stringify(finalResult, null, 2));
+  console.log(`evaluation: ${finalResult.status} promotion=${finalResult.promotion_eligible}`);
+  process.exit(0);
+}
+
+if (promotionEvidenceRequired && !promotionEvidencePass) {
+  const finalResult = {
+    checked_at: timestamp(),
+    task_id: task.id,
+    status: "blocked",
+    promotion_eligible: false,
+    deterministic,
+    llm: null,
+    execution_requirements: executionRequirements,
+    external_blocker: externalBlocker,
+    promotion_evidence: promotionEvidence,
+    summary: "Deterministic checks passed, but current-cycle promotion evidence is missing or invalid.",
+    missing_requirements: promotionEvidenceIssues,
   };
   writeText(path.join(STATE_DIR, "evaluation.json"), JSON.stringify(finalResult, null, 2));
   console.log(`evaluation: ${finalResult.status} promotion=${finalResult.promotion_eligible}`);
@@ -224,11 +253,14 @@ const finalResult = {
   deterministic,
   llm,
   execution_requirements: executionRequirements,
+  external_blocker: externalBlocker,
+  promotion_evidence: promotionEvidence,
   summary:
     llm?.summary ??
     (finalStatus === "done"
       ? "Task eligible for promotion."
       : "Task remains active after evaluator review."),
+  missing_requirements: Array.isArray(llm?.missing_requirements) ? llm.missing_requirements : [],
 };
 
 writeText(path.join(STATE_DIR, "evaluation.json"), JSON.stringify(finalResult, null, 2));

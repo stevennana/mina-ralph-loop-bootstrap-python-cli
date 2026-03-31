@@ -1,5 +1,6 @@
 import path from "node:path";
 import {
+  normalizePromotionEvidence,
   GENERATED_DIR,
   extractSection,
   findTaskDoc,
@@ -32,6 +33,7 @@ const outOfScope = extractSection(task.markdown, "Out of scope");
 const exitCriteria = extractSection(task.markdown, "Exit criteria");
 const requiredChecks = extractSection(task.markdown, "Required checks");
 const evaluatorNotes = extractSection(task.markdown, "Evaluator notes");
+const promotionEvidence = normalizePromotionEvidence(task.meta);
 
 const priorGaps =
   priorEvaluation && Array.isArray(priorEvaluation?.llm?.missing_requirements)
@@ -84,6 +86,9 @@ ${evaluatorNotes}
 
 Required repository artifacts for this task:
 ${(task.meta.required_files ?? []).map((file) => `- ${file}`).join("\n") || "- none"}
+
+Promotion evidence that must exist before promotion:
+${promotionEvidence.length ? promotionEvidence.map((item) => `- ${item.id}: ${item.manifest_path} via ${item.producer_command}`).join("\n") : "- none"}
 
 Required commands for this task:
 ${(task.meta.required_commands ?? []).map((cmd) => `- ${cmd}`).join("\n") || "- make verify"}

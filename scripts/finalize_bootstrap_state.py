@@ -142,6 +142,7 @@ def write_state(repo_root: Path, current_task_id: str | None, completed_tasks: l
             "- `task-history.md`: promotion history\n"
             "- `run-log.md`: append-only operational log\n"
             "- `backlog.md`: rendered queue snapshot\n"
+            "- `artifacts/live-proofs/`: preserved manifests and copied logs for promotion-grade live acceptance evidence\n"
         ),
         "last-result.txt": "",
         "evaluation.json": '{\n  "status": "not_run"\n}\n',

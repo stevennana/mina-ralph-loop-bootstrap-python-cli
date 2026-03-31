@@ -246,6 +246,8 @@ Adapt the copied scripts so they match the generated repo:
 - required commands must match the generated Makefile and `uv` workflow
 - evaluator and promotion logic must treat failing commands as hard gates
 - task contracts should declare execution requirements when selected acceptance tasks need a non-default worker sandbox lane such as live network access
+- live/external acceptance tasks should preserve promotion-grade proof under `state/artifacts/live-proofs/` instead of relying on temp test paths or historical prose
+- when a task needs that preserved proof, encode it in `taskmeta.promotion_evidence` so evaluator and operator summaries can validate it mechanically
 - worker/runtime startup guidance must match the CLI/worker process model
 - operator logging must refer to the logged worker path, not a web-style runtime
 - task prompts and loop guidance should remind the worker to keep `README.md` aligned when a completed task changes shipped features, fixes, commands, or setup

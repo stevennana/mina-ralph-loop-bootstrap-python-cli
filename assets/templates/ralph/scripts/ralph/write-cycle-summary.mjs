@@ -35,6 +35,7 @@ const summary = {
   execution_requirements: evaluation.execution_requirements ?? null,
   summary: evaluation.summary ?? "",
   missing_requirements: Array.isArray(evaluation.missing_requirements) ? evaluation.missing_requirements : [],
+  promotion_evidence: Array.isArray(evaluation.promotion_evidence) ? evaluation.promotion_evidence : [],
   satisfied_exit_criteria: Array.isArray(evaluation?.llm?.satisfied_exit_criteria)
     ? evaluation.llm.satisfied_exit_criteria
     : [],
@@ -71,6 +72,14 @@ if (summary.missing_requirements.length > 0) {
   for (const item of summary.missing_requirements) {
     lines.push(`- ${item}`);
   }
+}
+
+const validPromotionEvidence = summary.promotion_evidence.filter((item) => item?.valid === true).length;
+if (summary.promotion_evidence.length > 0) {
+  lines.push(
+    "",
+    `Promotion evidence: ${validPromotionEvidence}/${summary.promotion_evidence.length} item(s) valid for this cycle.`,
+  );
 }
 
 if (summary.worker_handoff_summary) {

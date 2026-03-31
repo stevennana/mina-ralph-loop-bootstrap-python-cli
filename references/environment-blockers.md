@@ -18,6 +18,8 @@ This is an environment blocker when:
 - the remaining gap is not ordinary feature work
 - the worker phase stops making forward progress even though the loop still thinks it is running
 
+For live/external acceptance tasks, the blocker record should point at the preserved promotion-evidence manifest under `state/artifacts/live-proofs/` rather than at transient pytest temp paths alone.
+
 ## Worker Stall Detection
 
 The harness should not try to prove Codex internal health directly.

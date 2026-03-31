@@ -154,6 +154,15 @@ class RenderDocsDerivationTests(unittest.TestCase):
         self.assertEqual(requirements["evaluator_sandbox"], "read-only")
         self.assertTrue(requirements["network_required"])
         self.assertEqual(requirements["blocker_policy"], "external_runtime_rca_after_3")
+        promotion_evidence = coverage_task["promotion_evidence"]
+        self.assertEqual(len(promotion_evidence), 1)
+        self.assertEqual(promotion_evidence[0]["kind"], "command_artifact")
+        self.assertEqual(promotion_evidence[0]["producer_command"], "make verify")
+        self.assertEqual(
+            promotion_evidence[0]["manifest_path"],
+            "state/artifacts/live-proofs/real-llm-reporting-acceptance-and-edge-coverage/latest/manifest.json",
+        )
+        self.assertEqual(promotion_evidence[0]["freshness"], "current_cycle")
 
     def test_default_tasks_keep_default_execution_requirements(self) -> None:
         feature_specs = [make_feature_spec("Note Editing", with_external_dependency=False)]
@@ -174,6 +183,7 @@ class RenderDocsDerivationTests(unittest.TestCase):
             self.assertEqual(requirements["evaluator_sandbox"], "read-only")
             self.assertFalse(requirements["network_required"])
             self.assertEqual(requirements["blocker_policy"], "standard_rca_after_3")
+            self.assertEqual(task["promotion_evidence"], [])
 
 
 if __name__ == "__main__":

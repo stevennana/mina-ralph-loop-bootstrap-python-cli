@@ -57,6 +57,7 @@ The Ralph loop relies on this.
 The loop should include:
 
 - deterministic checks
+- preserved promotion-grade evidence for live/external acceptance paths
 - a separate evaluator pass
 - promotion only when the task is substantively complete
 

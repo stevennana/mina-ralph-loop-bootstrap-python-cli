@@ -24,6 +24,16 @@ class CycleTruthContractTests(unittest.TestCase):
         (self.repo_root / "docs" / "PLANS.md").write_text("# PLANS\n", encoding="utf-8")
 
         self.task_id = "107-report-result-and-real-llm-e2e-acceptance"
+        self.live_proof_manifest = (
+            self.repo_root
+            / "state"
+            / "artifacts"
+            / "live-proofs"
+            / self.task_id
+            / "latest"
+            / "manifest.json"
+        )
+        self.live_proof_log = self.live_proof_manifest.parent / "llm-operational.jsonl"
         taskmeta = {
             "id": self.task_id,
             "title": "Report result and real LLM E2E acceptance",
@@ -34,6 +44,17 @@ class CycleTruthContractTests(unittest.TestCase):
             "required_commands": ["make verify", "make verify-real-llm"],
             "required_files": [],
             "human_review_triggers": ["Do not broaden scope."],
+            "promotion_evidence": [
+                {
+                    "id": "real-llm-onboarding-report",
+                    "kind": "jsonl_event_log",
+                    "producer_command": "make verify-real-llm",
+                    "manifest_path": f"state/artifacts/live-proofs/{self.task_id}/latest/manifest.json",
+                    "log_path": f"state/artifacts/live-proofs/{self.task_id}/latest/llm-operational.jsonl",
+                    "required_event": "llm.request.completed",
+                    "freshness": "current_cycle",
+                }
+            ],
             "execution_requirements": {
                 "worker_sandbox": "danger-full-access",
                 "evaluator_sandbox": "read-only",
@@ -89,10 +110,40 @@ class CycleTruthContractTests(unittest.TestCase):
             capture_output=True,
         )
 
+    def write_live_proof(self, *, checked_at: str, status: str = "passed", event_found: bool = True) -> None:
+        self.live_proof_manifest.parent.mkdir(parents=True, exist_ok=True)
+        self.live_proof_log.write_text(
+            "\n".join(
+                [
+                    json.dumps({"event": "llm.request.started"}),
+                    json.dumps({"event": "llm.request.completed"}) if event_found else json.dumps({"event": "llm.request.failed"}),
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        self.live_proof_manifest.write_text(
+            json.dumps(
+                {
+                    "task_id": self.task_id,
+                    "producer_command": "make verify-real-llm",
+                    "checked_at": checked_at,
+                    "status": status,
+                    "event_found": event_found,
+                    "copied_log_path": f"state/artifacts/live-proofs/{self.task_id}/latest/llm-operational.jsonl",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
     def test_render_evaluator_prompt_declares_current_cycle_precedence(self) -> None:
+        self.write_live_proof(checked_at="2026-03-31T00:00:01Z")
         (self.repo_root / "state" / "deterministic-checks.json").write_text(
             json.dumps(
                 {
+                    "checked_at": "2026-03-31T00:00:00Z",
                     "task_id": self.task_id,
                     "pass": True,
                     "commands": [
@@ -116,8 +167,10 @@ class CycleTruthContractTests(unittest.TestCase):
         prompt = prompt_path.read_text(encoding="utf-8")
 
         self.assertIn("Worker handoff summary from this cycle:", prompt)
+        self.assertIn("Promotion evidence summary for this cycle:", prompt)
         self.assertIn("Authoritative precedence for this cycle:", prompt)
         self.assertIn("treat the current-cycle deterministic check summary as the primary machine-readable truth", prompt)
+        self.assertIn("treat current-cycle promotion evidence manifests as the primary live-proof truth", prompt)
         self.assertIn("do not let stale blocked narrative override current-cycle passing checks", prompt)
 
     def test_write_cycle_summary_makes_evaluation_authoritative(self) -> None:
@@ -154,6 +207,12 @@ class CycleTruthContractTests(unittest.TestCase):
                     "llm": {
                         "satisfied_exit_criteria": ["Live proof succeeds."],
                     },
+                    "promotion_evidence": [
+                        {
+                            "id": "real-llm-onboarding-report",
+                            "valid": True,
+                        }
+                    ],
                     "missing_requirements": [],
                 },
                 indent=2,
@@ -171,6 +230,7 @@ class CycleTruthContractTests(unittest.TestCase):
         self.assertEqual(cycle_summary["status"], "done")
         self.assertTrue(cycle_summary["promotion_eligible"])
         self.assertIn("Authoritative current-cycle decision: status=`done` promotion=`true`.", last_result)
+        self.assertIn("Promotion evidence: 1/1 item(s) valid for this cycle.", last_result)
         self.assertIn("Worker handoff from this cycle (context only, not authoritative for promotion):", last_result)
         self.assertIn("Worker suspected a block before evaluator reran commands.", last_result)
 

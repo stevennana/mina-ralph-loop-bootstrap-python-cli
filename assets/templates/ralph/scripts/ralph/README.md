@@ -33,12 +33,14 @@ The first version of the loop could repeatedly work on one prompt, but it could 
 - `state/blocker-tracker.json`: repeat-blocker signature history and RCA branching state
 - `state/backlog.md`: rendered queue snapshot
 - `state/artifacts/`: per-cycle raw worker/evaluator/commit artifacts
+- `state/artifacts/live-proofs/`: stable promotion-grade manifests and copied logs for live acceptance tasks
 
 ## Logging
 
 - `state/run-log.md` is the compact operator log
 - `state/current-cycle.json` shows whether the current run is still active and which phase it is in
 - `state/current-cycle-summary.json` is the authoritative per-cycle summary; prefer it over raw worker prose when they disagree
+- live/external acceptance tasks should preserve a manifest and copied proof logs under `state/artifacts/live-proofs/` so promotion never depends on temp pytest paths or stale prose
 - `state/blocker-tracker.json` tracks repeated blocker signatures per task
 - full raw output for each cycle is written under `state/artifacts/`
 - manual operator runs should use `make worker-logged`, which writes a timestamped worker log under `logs/`
@@ -105,6 +107,7 @@ If no reason is supplied, the override records the default reason `operator manu
 - if evaluation ends in `blocked`, `run-loop.sh` stops for operator triage instead of blindly retrying the same runtime constraint forever
 - `state/worker-handoff.txt` is only the worker's contextual handoff; `state/current-cycle-summary.json` and the rewritten `state/last-result.txt` are the authoritative evaluator-backed outcome for that cycle
 - Required commands come from each task doc’s `taskmeta.required_commands`; `evaluate-task.mjs` runs exactly those commands plus required-file checks.
+- If a task declares `taskmeta.promotion_evidence`, promotion also requires a current-cycle preserved manifest proving that live acceptance succeeded.
 - `manual-promote.sh` is an explicit operator override; use it only for exceptional stalled-but-done cases. If you omit `--reason`, it records `operator manual promotion`.
 - If the evaluator repeatedly returns `not_done`, tighten the active task doc instead of making the prompt larger.
 - If a task is semantically done but not promotable, fix the contract or the deterministic checks; if you must override, use `manual-promote.sh` so the reason is recorded instead of silently skipping ahead.
